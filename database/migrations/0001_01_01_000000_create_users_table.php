@@ -13,11 +13,17 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('email')->unique();
+            $table->string('username', 32)->unique('unq_users_on_username');
+            $table->string('nickname', 128);
+            $table->string('email')->nullable()->unique('unq_users_on_email');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->dateTime('last_seen_at')->default(now());
+            $table->integer('views_count')->unsigned()->default(0);
+            $table->string('autologin_token', 64)->unique('unq_users_on_autologin_token');
             $table->rememberToken();
+            $table->binary('registration_ip_hash', 32)->integer('idx_users_on_registration_ip_hash');
+            $table->char('registration_country', 2);
             $table->timestamps();
         });
 
