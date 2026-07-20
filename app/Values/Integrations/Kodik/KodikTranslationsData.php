@@ -9,13 +9,11 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Saloon\Http\Response;
 
-final readonly class KodikMaterialsData implements Arrayable
+final readonly class KodikTranslationsData implements Arrayable
 {
     private function __construct(
         private string $time,
         private int $total,
-        private ?string $prev_page,
-        private ?string $next_page,
         private array $results,
     )
     {
@@ -30,18 +28,19 @@ final readonly class KodikMaterialsData implements Arrayable
         /** @var array $item */
         foreach ($json['results'] as $item) {
             /** @var string $title */
-            $title = $item['translation']['title'];
+            $title = $item['title'];
 
-            $item['translation']['title'] = Str::beforeLast($title, '.');
-
-            $results->push($item);
+            $results->push([
+                'id' => $item['id'],
+                'title' => Str::beforeLast($title, '.'),
+                'type' => Str::endsWith($title, '.Subtitles') ? 'subtitles' : 'voice',
+                'count' => $item['count'],
+            ]);
         }
 
         return new self(
             time: $json['time'],
             total: $json['total'],
-            prev_page: $json['prev_page'],
-            next_page: $json['next_page'],
             results: $results->toArray(),
         );
     }

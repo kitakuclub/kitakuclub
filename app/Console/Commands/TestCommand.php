@@ -6,6 +6,7 @@ namespace App\Console\Commands;
 
 use App\Http\Integrations\Kodik\KodikConnector;
 use App\Http\Integrations\Kodik\Requests\GetMaterialsRequest;
+use App\Http\Integrations\Kodik\Requests\GetTranslationsRequest;
 use Illuminate\Console\Attributes\Description;
 use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;
@@ -31,6 +32,7 @@ class TestCommand extends Command
 
         $res = $this->connector->send(
             new GetMaterialsRequest(),
+//            new GetTranslationsRequest(),
         );
 
         dd($res->dto(), $res->array());
