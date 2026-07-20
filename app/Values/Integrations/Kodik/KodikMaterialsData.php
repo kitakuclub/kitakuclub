@@ -6,17 +6,16 @@ namespace App\Values\Integrations\Kodik;
 
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Str;
 use Saloon\Http\Response;
 
 final readonly class KodikMaterialsData implements Arrayable
 {
-    private function __construct(
-        private string $time,
-        private int $total,
-        private ?string $prev_page,
-        private ?string $next_page,
-        private array $results,
+    public function __construct(
+        public string $time,
+        public int $total,
+        public ?string $prev_page,
+        public ?string $next_page,
+        public Collection $items,
     )
     {
     }
@@ -25,24 +24,19 @@ final readonly class KodikMaterialsData implements Arrayable
     {
         $json = $response->json();
 
-        $results = new Collection;
+        $items = new Collection;
 
         /** @var array $item */
-        foreach ($json['results'] as $item) {
-            /** @var string $title */
-            $title = $item['translation']['title'];
-
-            $item['translation']['title'] = Str::beforeLast($title, '.');
-
-            $results->push($item);
-        }
+        foreach ($json['results'] as $item) $items->add(
+            KodikMaterialsDataItem::make($item)
+        );
 
         return new self(
             time: $json['time'],
             total: $json['total'],
             prev_page: $json['prev_page'],
             next_page: $json['next_page'],
-            results: $results->toArray(),
+            items: $items,
         );
     }
 

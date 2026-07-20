@@ -11,10 +11,10 @@ use Saloon\Http\Response;
 
 final readonly class KodikTranslationsData implements Arrayable
 {
-    private function __construct(
-        private string $time,
-        private int $total,
-        private array $results,
+    public function __construct(
+        public string $time,
+        public int $total,
+        public array $results,
     )
     {
     }
@@ -30,11 +30,10 @@ final readonly class KodikTranslationsData implements Arrayable
             /** @var string $title */
             $title = $item['title'];
 
-            $results->push([
+            $results->add([
                 'id' => $item['id'],
                 'title' => Str::beforeLast($title, '.'),
                 'type' => Str::endsWith($title, '.Subtitles') ? 'subtitles' : 'voice',
-                'count' => $item['count'],
             ]);
         }
 

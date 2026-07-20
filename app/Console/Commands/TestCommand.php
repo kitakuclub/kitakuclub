@@ -7,6 +7,7 @@ namespace App\Console\Commands;
 use App\Http\Integrations\Kodik\KodikConnector;
 use App\Http\Integrations\Kodik\Requests\GetMaterialsRequest;
 use App\Http\Integrations\Kodik\Requests\GetTranslationsRequest;
+use App\Values\Integrations\Kodik\KodikMaterialsData;
 use Illuminate\Console\Attributes\Description;
 use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;
@@ -35,7 +36,10 @@ class TestCommand extends Command
 //            new GetTranslationsRequest(),
         );
 
-        dd($res->dto(), $res->array());
+        /** @var KodikMaterialsData $dto */
+        $dto = $res->dto();
+
+        dd($dto);
 
         $this->info('Test command started');
     }
