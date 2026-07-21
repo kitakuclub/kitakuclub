@@ -15,7 +15,7 @@ use Illuminate\Console\Command;
 
 #[Signature('kodik:funteams')]
 #[Description('Command description')]
-class TestCommand extends Command
+class KodikFunteamsCommand extends Command
 {
     public function __construct(
         private readonly KodikConnector $connector,
@@ -27,7 +27,7 @@ class TestCommand extends Command
     /**
      * Execute the console command.
      */
-    public function handle()
+    public function handle(): void
     {
         $this->connector->query()->add('types', 'anime,anime-serial');
 

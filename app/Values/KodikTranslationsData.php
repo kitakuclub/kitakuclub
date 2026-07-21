@@ -7,7 +7,6 @@ namespace App\Values;
 use App\Http\Integrations\Kodik\DTOs\TranslationDto;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Str;
 use Saloon\Http\Response;
 
 final readonly class KodikTranslationsData implements Arrayable
@@ -30,8 +29,8 @@ final readonly class KodikTranslationsData implements Arrayable
         foreach ($json['results'] as $item) {
             $results->add(new TranslationDto(
                 id: $item['id'],
-                title: Str::before($item['title'], '.Subtitles'),
-                type: Str::endsWith($item['title'], '.Subtitles') ? 'subtitles' : 'voice',
+                title: kodik_title($item['title']),
+                type: kodik_type($item['title']),
             ));
         }
 
