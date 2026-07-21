@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Values\Integrations\Kodik;
+namespace App\Values;
 
+use App\Http\Integrations\Kodik\DTOs\TranslationDto;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
@@ -11,10 +12,10 @@ use Saloon\Http\Response;
 
 final readonly class KodikTranslationsData implements Arrayable
 {
-    public function __construct(
+    private function __construct(
         public string $time,
         public int $total,
-        public array $results,
+        public Collection $results,
     )
     {
     }
@@ -27,20 +28,17 @@ final readonly class KodikTranslationsData implements Arrayable
 
         /** @var array $item */
         foreach ($json['results'] as $item) {
-            /** @var string $title */
-            $title = $item['title'];
-
-            $results->add([
-                'id' => $item['id'],
-                'title' => Str::beforeLast($title, '.'),
-                'type' => Str::endsWith($title, '.Subtitles') ? 'subtitles' : 'voice',
-            ]);
+            $results->add(new TranslationDto(
+                id: $item['id'],
+                title: Str::before($item['title'], '.'),
+                type: Str::endsWith($item['title'], '.Subtitles') ? 'subtitles' : 'voice',
+            ));
         }
 
         return new self(
             time: $json['time'],
             total: $json['total'],
-            results: $results->toArray(),
+            results: $results,
         );
     }
 

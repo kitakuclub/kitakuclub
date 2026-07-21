@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Integrations\Kodik\Requests;
 
-use App\Values\Integrations\Kodik\KodikTranslationsData;
+use App\Values\KodikTranslationsData as DTO;
 use Saloon\Enums\Method;
 use Saloon\Http\Request;
 use Saloon\Http\Response;
@@ -24,8 +24,8 @@ class GetTranslationsRequest extends Request
         return '/translations/v2';
     }
 
-    public function createDtoFromResponse(Response $response): KodikTranslationsData
+    public function createDtoFromResponse(Response $response): DTO
     {
-        return KodikTranslationsData::fromSaloonResponse($response);
+        return DTO::fromSaloonResponse($response);
     }
 }

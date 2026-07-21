@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Integrations\Kodik\Requests;
 
-use App\Values\Integrations\Kodik\KodikMaterialsData;
+use App\Values\KodikMaterialsData as DTO;
 use Saloon\Enums\Method;
 use Saloon\Http\Request;
 use Saloon\Http\Response;
@@ -24,8 +24,8 @@ class GetMaterialsRequest extends Request
         return '/list';
     }
 
-    public function createDtoFromResponse(Response $response): KodikMaterialsData
+    public function createDtoFromResponse(Response $response): DTO
     {
-        return KodikMaterialsData::fromSaloonResponse($response);
+        return DTO::fromSaloonResponse($response);
     }
 }
