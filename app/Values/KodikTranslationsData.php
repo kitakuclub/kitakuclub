@@ -30,7 +30,7 @@ final readonly class KodikTranslationsData implements Arrayable
         foreach ($json['results'] as $item) {
             $results->add(new TranslationDto(
                 id: $item['id'],
-                title: Str::before($item['title'], '.'),
+                title: Str::before($item['title'], '.Subtitles'),
                 type: Str::endsWith($item['title'], '.Subtitles') ? 'subtitles' : 'voice',
             ));
         }
