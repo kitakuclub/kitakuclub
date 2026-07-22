@@ -47,7 +47,7 @@ final readonly class KodikMaterialsData implements Arrayable
 
             $translation = new TranslationDto(
                 id: $translation['id'],
-                title: Str::beforeLast($translation['title'], '.'),
+                title: kodik_title($translation['title']),
                 type: $translation['type'],
             );
 

@@ -39,7 +39,7 @@ class KodikTranslationsCommand extends Command
         $this->connector->query()->add('types', 'anime,anime-serial');
         $this->connector->query()->add('with_seasons', true);
         $this->connector->query()->add('with_episodes', true);
-        $this->connector->query()->add('shikimori_id', 63832);
+        $this->connector->query()->add('shikimori_id', 43608);
 
         $res = $this->connector->send(
             new GetSearchRequest
@@ -97,6 +97,8 @@ class KodikTranslationsCommand extends Command
                                 'link' => $e->link,
                             ],
                         );
+
+                        $translation->episodes()->syncWithoutDetaching($episode);
                     });
                 });
             }
