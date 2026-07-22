@@ -14,6 +14,7 @@ final readonly class MaterialDto
      * @param TranslationDto $translation
      * @param Collection<SeasonDto> $seasons
      * @param Collection<ScreenshotDto> $screenshots
+     * @param string $link
      */
     public function __construct(
         public string $id,
@@ -21,6 +22,7 @@ final readonly class MaterialDto
         public TranslationDto $translation,
         public Collection $seasons,
         public Collection $screenshots,
+        public string $link,
     )
     {
     }

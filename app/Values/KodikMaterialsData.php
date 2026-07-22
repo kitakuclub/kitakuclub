@@ -79,14 +79,15 @@ final readonly class KodikMaterialsData implements Arrayable
                 translation: $translation,
                 seasons: $seasons,
                 screenshots: $screenshots,
+                link: $item['link'],
             ));
         }
 
         return new self(
             time: $json['time'],
             total: $json['total'],
-            prev_page: $json['prev_page'],
-            next_page: $json['next_page'],
+            prev_page: $json['prev_page'] ?? null,
+            next_page: $json['next_page'] ?? null,
             results: $results,
         );
     }

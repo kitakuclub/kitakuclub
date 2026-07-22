@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-#[Fillable(['name', 'slug'])]
+#[Fillable(['funteam_id', 'source', 'external_id', 'kind', 'locale', 'link'])]
 class Translation extends Model
 {
     /** @use HasFactory<TranslationFactory> */

@@ -18,8 +18,9 @@ return new class extends Migration
             $table->id();
             $table->string('source');
             $table->string('external_id');
-            $table->string('kind');
+            $table->char('kind', 3);
             $table->char('locale', 2)->default(Locale::RU);
+            $table->string('link');
             $table->timestamps();
         });
 
