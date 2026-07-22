@@ -6,10 +6,14 @@ namespace App\Console\Commands;
 
 use App\Enums\EntryLocale;
 use App\Enums\TranslationKind;
+use App\Http\Integrations\Kodik\DTOs\EpisodeDto;
 use App\Http\Integrations\Kodik\DTOs\MaterialDto;
+use App\Http\Integrations\Kodik\DTOs\SeasonDto;
 use App\Http\Integrations\Kodik\KodikConnector;
 use App\Http\Integrations\Kodik\Requests\GetSearchRequest;
+use App\Models\Episode;
 use App\Models\Funteam;
+use App\Models\Season;
 use App\Models\Translation;
 use App\Values\KodikMaterialsData;
 use Illuminate\Console\Attributes\Description;
@@ -47,16 +51,16 @@ class KodikTranslationsCommand extends Command
         $this->withProgressBar(
             $dto->results->toArray(),
             static function (MaterialDto $anime) {
-                /** @var Funteam $translation */
-                $translation = Funteam::query()->where('name', $anime->translation->title)->firstOrFail();
+                /** @var Funteam $funteam */
+                $funteam = Funteam::query()->where('name', $anime->translation->title)->firstOrFail();
 
-                Translation::firstOrCreate(
+                $translation = Translation::firstOrCreate(
                     [
                         'source' => 'kodik',
                         'external_id' => $anime->translation->id
                     ],
                     [
-                        'funteam_id' => $translation->id,
+                        'funteam_id' => $funteam->id,
                         'source' => 'kodik',
                         'external_id' => $anime->translation->id,
                         'kind' => match ($anime->translation->type) {
@@ -65,9 +69,36 @@ class KodikTranslationsCommand extends Command
                             default => throw new \InvalidArgumentException('unknown translation type.'),
                         },
                         'locale' => EntryLocale::RU,
-                        'link' => $anime->link,
                     ]
                 );
+
+                $anime->seasons->map(function (SeasonDto $s) use ($translation) {
+                    /** @var Season $season */
+                    $season = $translation->seasons()->firstOrCreate(
+                        [
+                            'translation_id' => $translation->id,
+                            'number' => $s->number,
+                        ],
+                        [
+                            'number' => $s->number,
+                            'link' => $s->link,
+                        ],
+                    );
+
+                    $s->episodes->map(function (EpisodeDto $e) use ($season, $translation) {
+                        /** @var Episode $episode */
+                        $episode = $season->episodes()->firstOrCreate(
+                            [
+                                'season_id' => $season->id,
+                                'number' => $e->number,
+                            ],
+                            [
+                                'number' => $e->number,
+                                'link' => $e->link,
+                            ],
+                        );
+                    });
+                });
             }
         );
 
