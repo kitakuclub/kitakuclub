@@ -6,11 +6,12 @@ namespace App\Console\Commands;
 
 use App\Enums\EntryLocale;
 use App\Enums\TranslationKind;
+use App\Enums\TranslationSource;
 use App\Http\Integrations\Kodik\DTOs\EpisodeDto;
 use App\Http\Integrations\Kodik\DTOs\MaterialDto;
 use App\Http\Integrations\Kodik\DTOs\SeasonDto;
 use App\Http\Integrations\Kodik\KodikConnector;
-use App\Http\Integrations\Kodik\Requests\GetSearchRequest;
+use App\Http\Integrations\Kodik\Requests\GetMaterialsRequest;
 use App\Models\Episode;
 use App\Models\Funteam;
 use App\Models\Season;
@@ -36,76 +37,90 @@ class KodikTranslationsCommand extends Command
      */
     public function handle(): void
     {
+        $this->connector->query()->add('limit', 100);
         $this->connector->query()->add('types', 'anime,anime-serial');
         $this->connector->query()->add('with_seasons', true);
         $this->connector->query()->add('with_episodes', true);
-        $this->connector->query()->add('shikimori_id', 43608);
 
-        $res = $this->connector->send(
-            new GetSearchRequest
-        );
+        /** @var string|null $next_page */
+        $next_page = null;
 
-        /** @var KodikMaterialsData $dto */
-        $dto = $res->dto();
+        do
+        {
+            $this->connector->query()->add('next', $next_page);
 
-        $this->withProgressBar(
-            $dto->results->toArray(),
-            static function (MaterialDto $anime) {
-                /** @var Funteam $funteam */
-                $funteam = Funteam::query()->where('name', $anime->translation->title)->firstOrFail();
+            $res = $this->connector->send(
+                new GetMaterialsRequest
+            );
 
-                $translation = Translation::firstOrCreate(
-                    [
-                        'source' => 'kodik',
-                        'external_id' => $anime->translation->id
-                    ],
-                    [
-                        'funteam_id' => $funteam->id,
-                        'source' => 'kodik',
-                        'external_id' => $anime->translation->id,
-                        'kind' => match ($anime->translation->type) {
-                            'voice' => TranslationKind::DUB,
-                            'subtitles' => TranslationKind::SUB,
-                            default => throw new \InvalidArgumentException('unknown translation type.'),
-                        },
-                        'locale' => EntryLocale::RU,
-                    ]
-                );
+            /** @var KodikMaterialsData $dto */
+            $dto = $res->dto();
 
-                $anime->seasons->map(function (SeasonDto $s) use ($translation) {
-                    /** @var Season $season */
-                    $season = $translation->seasons()->firstOrCreate(
+            $this->comment($dto->next_page);
+
+            $this->withProgressBar(
+                $dto->results->toArray(),
+                static function (MaterialDto $anime) {
+                    /** @var Funteam $funteam */
+                    $funteam = Funteam::query()->where('name', $anime->translation->title)->firstOrFail();
+
+                    $translation = Translation::firstOrCreate(
                         [
-                            'translation_id' => $translation->id,
-                            'number' => $s->number,
+                            'source' => TranslationSource::KODIK,
+                            'external_id' => $anime->translation->id
                         ],
                         [
-                            'number' => $s->number,
-                            'link' => $s->link,
-                        ],
+                            'funteam_id' => $funteam->id,
+                            'source' => TranslationSource::KODIK,
+                            'external_id' => $anime->translation->id,
+                            'kind' => match ($anime->translation->type) {
+                                'voice' => TranslationKind::DUB,
+                                'subtitles' => TranslationKind::SUB,
+                                default => throw new \InvalidArgumentException('unknown translation type.'),
+                            },
+                            'locale' => EntryLocale::RU,
+                        ]
                     );
 
-                    $s->episodes->map(function (EpisodeDto $e) use ($season, $translation) {
-                        /** @var Episode $episode */
-                        $episode = $season->episodes()->firstOrCreate(
+                    $anime->seasons->each(static function (SeasonDto $s) use ($translation) {
+                        if (floatval($s->number) < 0)
+                            return;
+
+                        /** @var Season $season */
+                        $season = $translation->seasons()->firstOrCreate(
                             [
-                                'season_id' => $season->id,
-                                'number' => $e->number,
+                                'translation_id' => $translation->id,
+                                'number' => $s->number,
                             ],
                             [
-                                'number' => $e->number,
-                                'link' => $e->link,
+                                'number' => $s->number,
+                                'link' => $s->link,
                             ],
                         );
 
-                        $translation->episodes()->syncWithoutDetaching($episode);
+                        $s->episodes->each(static function (EpisodeDto $e) use ($season, $translation) {
+                            /** @var Episode $episode */
+                            $episode = $season->episodes()->firstOrCreate(
+                                [
+                                    'season_id' => $season->id,
+                                    'number' => $e->number,
+                                ],
+                                [
+                                    'number' => $e->number,
+                                    'link' => $e->link,
+                                ],
+                            );
+
+                            $translation->episodes()->syncWithoutDetaching($episode);
+                        });
                     });
-                });
-            }
-        );
+                }
+            );
 
-        $this->newLine();
+            $this->info(' success');
 
-        $this->info('success');
+            $next_page = $dto->next_page;
+        }
+        while ($dto->next_page);
     }
 }

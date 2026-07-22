@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('funteams', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('name')->unique('unq_funteams_on_name');
             $table->string('slug')->unique('unq_funteams_on_slug');
             $table->timestamps();
         });

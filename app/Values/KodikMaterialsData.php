@@ -12,7 +12,6 @@ use App\Http\Integrations\Kodik\DTOs\TranslationDto;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Str;
 use Saloon\Http\Response;
 
 final readonly class KodikMaterialsData implements Arrayable
@@ -39,6 +38,8 @@ final readonly class KodikMaterialsData implements Arrayable
         $json = $response->json();
 
         $results = new Collection;
+
+        $url_query_param = static fn(?string $url, string $key) => $url ? (new \Uri($url))->query()->get($key) : null;
 
         /** @var array $item */
         foreach ($json['results'] as $item) {
@@ -86,8 +87,8 @@ final readonly class KodikMaterialsData implements Arrayable
         return new self(
             time: $json['time'],
             total: $json['total'],
-            prev_page: $json['prev_page'] ?? null,
-            next_page: $json['next_page'] ?? null,
+            prev_page: $url_query_param($json['prev_page'], 'prev'),
+            next_page: $url_query_param($json['next_page'], 'next'),
             results: $results,
         );
     }

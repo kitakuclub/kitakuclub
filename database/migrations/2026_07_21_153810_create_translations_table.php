@@ -27,6 +27,8 @@ return new class extends Migration
             $table->bigInteger('funteam_id', false, true)->after('id');
             $table->foreign('funteam_id', 'fk_translations_on_funteam_id')->references('id')->on('funteams');
 
+            $table->index(['funteam_id', 'kind'], 'idx_translations_on_funteam_id_and_kind');
+
             $table->unique(['source', 'external_id'], 'unq_translations_on_source_and_external_id');
         });
     }

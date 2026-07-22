@@ -22,7 +22,9 @@ return new class extends Migration
             $table->foreign('episode_id', 'fk_translation_episode_on_episode_id')->references('id')->on('episodes');
             $table->foreign('translation_id', 'fk_translation_episode_on_translation_id')->references('id')->on('translations');
 
-            $table->unique(['episode_id', 'translation_id'], 'unq_translation_episode_on_episode_id_and_translation_id');
+            $table->index('episode_id', 'idx_translation_episode_on_episode_id');
+
+            $table->unique(['translation_id', 'episode_id'], 'unq_translation_episode_on_translation_id_and_episode_id');
         });
     }
 
