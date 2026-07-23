@@ -10,21 +10,23 @@ final readonly class MaterialDto
 {
     /**
      * @param string $id
-     * @param string $title
+     * @param string $link
+     * @param string $name каноническое имя
      * @param TranslationDto $translation
      * @param Collection<SeasonDto>|null $seasons
      * @param Collection<ScreenshotDto> $screenshots
-     * @param string $link
-     * @param array|null $material_data
+     * @param string|null $shikimori_id
+     * @param MaterialDataDto|null $material_data
      */
     public function __construct(
         public string $id,
-        public string $title,
+        public string $link,
+        public string $name,
         public TranslationDto $translation,
         public Collection|null $seasons,
         public Collection $screenshots,
-        public string $link,
-        public array|null $material_data
+        public string|null $shikimori_id,
+        public MaterialDataDto|null $material_data,
     )
     {
     }

@@ -12,6 +12,7 @@ use App\Http\Integrations\Kodik\DTOs\MaterialDto;
 use App\Http\Integrations\Kodik\DTOs\SeasonDto;
 use App\Http\Integrations\Kodik\KodikConnector;
 use App\Http\Integrations\Kodik\Requests\GetMaterialsRequest;
+use App\Models\Anime;
 use App\Models\Episode;
 use App\Models\Funteam;
 use App\Models\Season;
@@ -61,21 +62,24 @@ class KodikTranslationsCommand extends Command
 
             $this->withProgressBar(
                 $dto->results->toArray(),
-                static function (MaterialDto $_anime) {
-                    dd($_anime);
+                static function (MaterialDto $_material) {
+
                     /** @var Funteam $funteam */
-                    $funteam = Funteam::query()->where('name', $_anime->translation->title)->firstOrFail();
+                    $funteam = Funteam::query()->where('name', $_material->translation->title)->firstOrFail();
+
+//                    /** @var Anime $anime */
+//                    $anime = Anime::query()->where('myanimelist_id', $_material->shikimori_id)->firstOrFail();
 
                     $translation = Translation::firstOrCreate(
                         [
                             'source' => TranslationSource::KODIK,
-                            'external_id' => $_anime->translation->id
+                            'external_id' => $_material->translation->id
                         ],
                         [
                             'funteam_id' => $funteam->id,
                             'source' => TranslationSource::KODIK,
-                            'external_id' => $_anime->translation->id,
-                            'kind' => match ($_anime->translation->type) {
+                            'external_id' => $_material->translation->id,
+                            'kind' => match ($_material->translation->type) {
                                 'voice' => TranslationKind::DUB,
                                 'subtitles' => TranslationKind::SUB,
                                 default => throw new \InvalidArgumentException('unknown translation type.'),
@@ -84,9 +88,13 @@ class KodikTranslationsCommand extends Command
                         ]
                     );
 
-                    $_anime->seasons->each(static function (SeasonDto $_season) use ($translation) {
+                    if (is_null($_material->seasons))
+                        return; // @todo strategy pattern or other *Command by type "movie-*"
+
+                    $_material->seasons->each(static function (SeasonDto $_season) use ($translation) {
+
                         if (floatval($_season->number) < 0)
-                            return;
+                            return; // @todo example kodik "serial-59967"
 
                         /** @var Season $season */
                         $season = $translation->seasons()->firstOrCreate(
@@ -101,6 +109,7 @@ class KodikTranslationsCommand extends Command
                         );
 
                         $_season->episodes->each(static function (EpisodeDto $_episode) use ($season, $translation) {
+
                             /** @var Episode $episode */
                             $episode = $season->episodes()->firstOrCreate(
                                 [

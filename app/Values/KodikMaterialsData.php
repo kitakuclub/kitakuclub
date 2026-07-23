@@ -6,6 +6,7 @@ namespace App\Values;
 
 use App\Http\Integrations\Kodik\DTOs\EpisodeDto;
 use App\Http\Integrations\Kodik\DTOs\MaterialDto;
+use App\Http\Integrations\Kodik\DTOs\MaterialDataDto;
 use App\Http\Integrations\Kodik\DTOs\ScreenshotDto;
 use App\Http\Integrations\Kodik\DTOs\SeasonDto;
 use App\Http\Integrations\Kodik\DTOs\TranslationDto;
@@ -79,14 +80,20 @@ final readonly class KodikMaterialsData implements Arrayable
                 ),
             ));
 
+            /** @var MaterialDataDto|null $material_data */
+            $material_data = isset($item['material_data'])
+                ? new MaterialDataDto(...Arr::only($item['material_data'], ['anime_kind', 'anime_status']))
+                : null; // @todo strategy pattern
+
             $results->add(new MaterialDto(
                 id: $item['id'],
-                title: $item['title'],
+                link: $item['link'],
+                name: $item['title_orig'],
                 translation: $translation,
                 seasons: $seasons->isEmpty() ? null : $seasons,
                 screenshots: $screenshots,
-                link: $item['link'],
-                material_data: $item['material_data'] ?? null,
+                shikimori_id: $item['shikimori_id'] ?? null,
+                material_data: $material_data,
             ));
         }
 

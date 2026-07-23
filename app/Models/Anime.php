@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-#[Fillable([])]
+#[Fillable(['kind', 'rating', 'status', 'name', 'slug'])]
 class Anime extends Model
 {
     /** @use HasFactory<AnimeFactory> */

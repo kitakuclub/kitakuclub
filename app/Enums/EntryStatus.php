@@ -6,6 +6,7 @@ namespace App\Enums;
 
 enum EntryStatus: string
 {
+    case UNKNOWN = 'unknown';
     case ANONS = 'anons';
     case ONGOING = 'ongoing';
     case RELEASED = 'released';
