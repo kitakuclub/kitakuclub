@@ -54,17 +54,22 @@ final readonly class KodikMaterialsData implements Arrayable
 
             $seasons = new Collection(Arr::map(
                 $item['seasons'] ?? [],
-                static fn(array $season, int $number): SeasonDto => new SeasonDto(
-                    number: $number,
-                    episodes: new Collection(Arr::map(
+                static function (array $season, int $number): SeasonDto {
+
+                    $episodes = new Collection(Arr::map(
                         $season['episodes'] ?? [],
                         static fn(string $link, int $number): EpisodeDto => new EpisodeDto(
                             number: $number,
                             link: $link,
                         ),
-                    )),
-                    link: $season['link'],
-                ),
+                    ));
+
+                    return new SeasonDto(
+                        number: $number,
+                        episodes: $episodes->isEmpty() ? null : $episodes,
+                        link: $season['link'],
+                    );
+                },
             ));
 
             $screenshots = new Collection(Arr::map(
@@ -78,9 +83,10 @@ final readonly class KodikMaterialsData implements Arrayable
                 id: $item['id'],
                 title: $item['title'],
                 translation: $translation,
-                seasons: $seasons,
+                seasons: $seasons->isEmpty() ? null : $seasons,
                 screenshots: $screenshots,
                 link: $item['link'],
+                material_data: $item['material_data'] ?? null,
             ));
         }
 

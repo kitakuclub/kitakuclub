@@ -12,17 +12,19 @@ final readonly class MaterialDto
      * @param string $id
      * @param string $title
      * @param TranslationDto $translation
-     * @param Collection<SeasonDto> $seasons
+     * @param Collection<SeasonDto>|null $seasons
      * @param Collection<ScreenshotDto> $screenshots
      * @param string $link
+     * @param array|null $material_data
      */
     public function __construct(
         public string $id,
         public string $title,
         public TranslationDto $translation,
-        public Collection $seasons,
+        public Collection|null $seasons,
         public Collection $screenshots,
         public string $link,
+        public array|null $material_data
     )
     {
     }

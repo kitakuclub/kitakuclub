@@ -41,6 +41,7 @@ class KodikTranslationsCommand extends Command
         $this->connector->query()->add('types', 'anime,anime-serial');
         $this->connector->query()->add('with_seasons', true);
         $this->connector->query()->add('with_episodes', true);
+        $this->connector->query()->add('with_material_data', true);
 
         /** @var string|null $next_page */
         $next_page = null;
@@ -60,20 +61,21 @@ class KodikTranslationsCommand extends Command
 
             $this->withProgressBar(
                 $dto->results->toArray(),
-                static function (MaterialDto $anime) {
+                static function (MaterialDto $_anime) {
+                    dd($_anime);
                     /** @var Funteam $funteam */
-                    $funteam = Funteam::query()->where('name', $anime->translation->title)->firstOrFail();
+                    $funteam = Funteam::query()->where('name', $_anime->translation->title)->firstOrFail();
 
                     $translation = Translation::firstOrCreate(
                         [
                             'source' => TranslationSource::KODIK,
-                            'external_id' => $anime->translation->id
+                            'external_id' => $_anime->translation->id
                         ],
                         [
                             'funteam_id' => $funteam->id,
                             'source' => TranslationSource::KODIK,
-                            'external_id' => $anime->translation->id,
-                            'kind' => match ($anime->translation->type) {
+                            'external_id' => $_anime->translation->id,
+                            'kind' => match ($_anime->translation->type) {
                                 'voice' => TranslationKind::DUB,
                                 'subtitles' => TranslationKind::SUB,
                                 default => throw new \InvalidArgumentException('unknown translation type.'),
@@ -82,32 +84,32 @@ class KodikTranslationsCommand extends Command
                         ]
                     );
 
-                    $anime->seasons->each(static function (SeasonDto $s) use ($translation) {
-                        if (floatval($s->number) < 0)
+                    $_anime->seasons->each(static function (SeasonDto $_season) use ($translation) {
+                        if (floatval($_season->number) < 0)
                             return;
 
                         /** @var Season $season */
                         $season = $translation->seasons()->firstOrCreate(
                             [
                                 'translation_id' => $translation->id,
-                                'number' => $s->number,
+                                'number' => $_season->number,
                             ],
                             [
-                                'number' => $s->number,
-                                'link' => $s->link,
+                                'number' => $_season->number,
+                                'link' => $_season->link,
                             ],
                         );
 
-                        $s->episodes->each(static function (EpisodeDto $e) use ($season, $translation) {
+                        $_season->episodes->each(static function (EpisodeDto $_episode) use ($season, $translation) {
                             /** @var Episode $episode */
                             $episode = $season->episodes()->firstOrCreate(
                                 [
                                     'season_id' => $season->id,
-                                    'number' => $e->number,
+                                    'number' => $_episode->number,
                                 ],
                                 [
-                                    'number' => $e->number,
-                                    'link' => $e->link,
+                                    'number' => $_episode->number,
+                                    'link' => $_episode->link,
                                 ],
                             );
 
