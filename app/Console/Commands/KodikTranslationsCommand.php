@@ -12,7 +12,6 @@ use App\Http\Integrations\Kodik\DTOs\MaterialDto;
 use App\Http\Integrations\Kodik\DTOs\SeasonDto;
 use App\Http\Integrations\Kodik\KodikConnector;
 use App\Http\Integrations\Kodik\Requests\GetMaterialsRequest;
-use App\Models\Anime;
 use App\Models\Episode;
 use App\Models\Funteam;
 use App\Models\Season;
@@ -21,6 +20,8 @@ use App\Values\KodikMaterialsData;
 use Illuminate\Console\Attributes\Description;
 use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 
 #[Signature('kodik:translations')]
 #[Description('Command description')]
@@ -47,6 +48,10 @@ class KodikTranslationsCommand extends Command
         /** @var string|null $next_page */
         $next_page = null;
 
+        /** @var Collection<Funteam> $funteams */
+        $funteams = Funteam::all(['id', 'name']);
+        $funteams->each(fn (Funteam $funteam) => $funteam->name = Str::lower($funteam->name));
+
         do
         {
             $this->connector->query()->add('next', $next_page);
@@ -58,17 +63,12 @@ class KodikTranslationsCommand extends Command
             /** @var KodikMaterialsData $dto */
             $dto = $res->dto();
 
-            $this->comment($dto->next_page);
-
             $this->withProgressBar(
                 $dto->results->toArray(),
-                static function (MaterialDto $_material) {
+                static function (MaterialDto $_material) use ($funteams) {
 
                     /** @var Funteam $funteam */
-                    $funteam = Funteam::query()->where('name', $_material->translation->title)->firstOrFail();
-
-//                    /** @var Anime $anime */
-//                    $anime = Anime::query()->where('myanimelist_id', $_material->shikimori_id)->firstOrFail();
+                    $funteam = $funteams->firstOrFail('name', Str::lower($_material->translation->title));
 
                     $translation = Translation::firstOrCreate(
                         [
@@ -82,7 +82,7 @@ class KodikTranslationsCommand extends Command
                             'kind' => match ($_material->translation->type) {
                                 'voice' => TranslationKind::DUB,
                                 'subtitles' => TranslationKind::SUB,
-                                default => throw new \InvalidArgumentException('unknown translation type.'),
+                                default => throw new \InvalidArgumentException('Unknown translation type.'),
                             },
                             'locale' => EntryLocale::RU,
                         ]
@@ -108,10 +108,11 @@ class KodikTranslationsCommand extends Command
                             ],
                         );
 
-                        $_season->episodes->each(static function (EpisodeDto $_episode) use ($season, $translation) {
+                        /** @var Collection<Episode> $episodes */
+                        $episodes = new Collection;
 
-                            /** @var Episode $episode */
-                            $episode = $season->episodes()->firstOrCreate(
+                        $_season->episodes->each(static fn(EpisodeDto $_episode) => $episodes->add(
+                            $season->episodes()->firstOrCreate(
                                 [
                                     'season_id' => $season->id,
                                     'number' => $_episode->number,
@@ -120,10 +121,12 @@ class KodikTranslationsCommand extends Command
                                     'number' => $_episode->number,
                                     'link' => $_episode->link,
                                 ],
-                            );
+                            )
+                        ));
 
-                            $translation->episodes()->syncWithoutDetaching($episode);
-                        });
+                        $translation->episodes()->syncWithoutDetaching(
+                            $episodes->pluck('id')->all()
+                        );
                     });
                 }
             );

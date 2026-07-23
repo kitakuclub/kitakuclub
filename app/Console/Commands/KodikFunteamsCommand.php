@@ -12,6 +12,7 @@ use App\Values\KodikTranslationsData;
 use Illuminate\Console\Attributes\Description;
 use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;
+use Illuminate\Support\Str;
 
 #[Signature('kodik:funteams')]
 #[Description('Command description')]
@@ -39,7 +40,7 @@ class KodikFunteamsCommand extends Command
         $dto = $res->dto();
 
         $translations = $dto->results->unique(
-            static fn(TranslationDto $translation) => mb_strtolower(trim($translation->title))
+            static fn(TranslationDto $translation) => Str::lower(trim($translation->title))
         );
 
         $this->withProgressBar(

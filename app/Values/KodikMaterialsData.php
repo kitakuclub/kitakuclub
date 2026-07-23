@@ -82,7 +82,16 @@ final readonly class KodikMaterialsData implements Arrayable
 
             /** @var MaterialDataDto|null $material_data */
             $material_data = isset($item['material_data'])
-                ? new MaterialDataDto(...Arr::only($item['material_data'], ['anime_kind', 'anime_status']))
+                ? new MaterialDataDto(
+                    ...Arr::only(
+                        $item['material_data'],
+                        [
+                            'anime_kind',
+                            'anime_status',
+                            'rating_mpaa',
+                        ]
+                    )
+                )
                 : null; // @todo strategy pattern
 
             $results->add(new MaterialDto(

@@ -52,20 +52,21 @@ class KodikAnimesCommand extends Command
 
             $this->withProgressBar(
                 $dto->results->toArray(),
-                static function (MaterialDto $_material) {
+                function (MaterialDto $_anime) {
 
-                    $kind = $_material->material_data->anime_kind ?? 'unknown';
-                    $status = $_material->material_data->anime_status ?? 'unknown';
+                    $kind = $_anime->material_data->anime_kind ?? 'unknown';
+                    $rating = $_anime->material_data->rating_mpaa ?? 'unknown';
+                    $status = $_anime->material_data->anime_status ?? 'unknown';
 
                     $anime = Anime::firstOrCreate(
                         [
-                            'name' => $_material->name,
+                            'name' => $_anime->name,
                         ],
                         [
                             'kind' => AnimeKind::from($kind),
-                            'rating' => EntryRating::G, // @todo
+                            'rating' => EntryRating::fromKodik($rating),
                             'status' => EntryStatus::from($status),
-                            'name' => $_material->name,
+                            'name' => $_anime->name,
                             'slug' => uniqid(),
                         ]
                     );
