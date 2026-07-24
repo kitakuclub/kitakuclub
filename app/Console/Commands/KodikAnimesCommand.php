@@ -8,13 +8,16 @@ use App\Enums\AnimeKind;
 use App\Enums\EntryRating;
 use App\Enums\EntryStatus;
 use App\Http\Integrations\Kodik\DTOs\MaterialDto;
+use App\Http\Integrations\Kodik\DTOs\SourceDto;
 use App\Http\Integrations\Kodik\KodikConnector;
 use App\Http\Integrations\Kodik\Requests\GetMaterialsRequest;
 use App\Models\Anime;
+use App\Models\Source;
 use App\Values\KodikMaterialsData;
 use Illuminate\Console\Attributes\Description;
 use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;
+use Illuminate\Support\Collection;
 
 #[Signature('kodik:animes')]
 #[Description('Command description')]
@@ -70,6 +73,19 @@ class KodikAnimesCommand extends Command
                             'slug' => uniqid(),
                         ]
                     );
+
+                    /** @var Collection<Source> $sources */
+                    $sources = new Collection;
+
+                    if (is_null($_anime->sources))
+                        return;
+
+                    $_anime->sources->each(fn(SourceDto $_source) => $sources->add(Source::make([
+                        'name' => $_source->name,
+                        'external_id' => $_source->external_id,
+                    ])));
+
+                    $sources->each(fn(Source $source) => $anime->sources()->updateOrCreate($source->toArray()));
                 }
             );
 

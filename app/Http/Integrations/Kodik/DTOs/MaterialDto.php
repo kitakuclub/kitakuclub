@@ -15,7 +15,7 @@ final readonly class MaterialDto
      * @param TranslationDto $translation
      * @param Collection<SeasonDto>|null $seasons
      * @param Collection<ScreenshotDto> $screenshots
-     * @param string|null $shikimori_id
+     * @param Collection<SourceDto>|null $sources
      * @param MaterialDataDto|null $material_data
      */
     public function __construct(
@@ -25,7 +25,7 @@ final readonly class MaterialDto
         public TranslationDto $translation,
         public Collection|null $seasons,
         public Collection $screenshots,
-        public string|null $shikimori_id,
+        public Collection|null $sources,
         public MaterialDataDto|null $material_data,
     )
     {

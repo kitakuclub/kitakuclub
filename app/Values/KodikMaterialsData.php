@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace App\Values;
 
+use App\Enums\SourceName;
 use App\Http\Integrations\Kodik\DTOs\EpisodeDto;
 use App\Http\Integrations\Kodik\DTOs\MaterialDto;
 use App\Http\Integrations\Kodik\DTOs\MaterialDataDto;
 use App\Http\Integrations\Kodik\DTOs\ScreenshotDto;
 use App\Http\Integrations\Kodik\DTOs\SeasonDto;
+use App\Http\Integrations\Kodik\DTOs\SourceDto;
 use App\Http\Integrations\Kodik\DTOs\TranslationDto;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Arr;
@@ -80,6 +82,15 @@ final readonly class KodikMaterialsData implements Arrayable
                 ),
             ));
 
+            /** @var Collection<SourceDto> $sources */
+            $sources = new Collection(Arr::map(
+                Arr::only($item, ['imdb_id', 'kinopoisk_id', 'myanimelist_id', 'shikimori_id']),
+                static fn(string $external_id, string $name) => new SourceDto(
+                    name: SourceName::fromKodik($name)->value,
+                    external_id: $external_id,
+                ),
+            ));
+
             /** @var MaterialDataDto|null $material_data */
             $material_data = isset($item['material_data'])
                 ? new MaterialDataDto(
@@ -101,7 +112,7 @@ final readonly class KodikMaterialsData implements Arrayable
                 translation: $translation,
                 seasons: $seasons->isEmpty() ? null : $seasons,
                 screenshots: $screenshots,
-                shikimori_id: $item['shikimori_id'] ?? null,
+                sources: $sources->isEmpty() ? null : $sources->values(),
                 material_data: $material_data,
             ));
         }
