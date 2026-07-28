@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-#[Fillable(['translation_id', 'number', 'link'])]
+#[Fillable(['number', 'link'])]
 class Season extends Model
 {
     /** @use HasFactory<SeasonFactory> */

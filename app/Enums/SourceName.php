@@ -12,6 +12,7 @@ enum SourceName: string
     case KINOPOISK = 'kinopoisk';
     case MYANIMELIST = 'myanimelist';
     case SHIKIMORI = 'shikimori';
+    case KODIK = 'kodik';
 
     public static function fromKodik(string $external_id): self
     {
@@ -20,6 +21,7 @@ enum SourceName: string
             'kinopoisk_id' => self::KINOPOISK,
             'myanimelist_id' => self::MYANIMELIST,
             'shikimori_id' => self::SHIKIMORI,
+            'id' => self::KODIK,
             default => throw new \InvalidArgumentException('Unknown source name.'),
         };
     }

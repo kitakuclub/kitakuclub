@@ -5,10 +5,13 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
 
-    $anime = Anime::with(['sources'])->findOrFail(444);
-
+//    /** @var Anime $anime */
+    $anime = Anime::with(['sources'])->findOrFail($_GET['anime']);
+//\Illuminate\Support\Facades\DB::table('releases')->delete();
     dd(
-        $anime,
+        $anime->toArray(),
+        $anime->releases->toArray(),
+        $anime->releases[2]->funteam->toArray(),
     );
 
     return view('welcome');

@@ -11,7 +11,8 @@ final readonly class MaterialDto
     /**
      * @param string $id
      * @param string $link
-     * @param string $name каноническое имя
+     * @param string $title
+     * @param string $title_orig
      * @param TranslationDto $translation
      * @param Collection<SeasonDto>|null $seasons
      * @param Collection<ScreenshotDto> $screenshots
@@ -21,7 +22,8 @@ final readonly class MaterialDto
     public function __construct(
         public string $id,
         public string $link,
-        public string $name,
+        public string $title,
+        public string $title_orig,
         public TranslationDto $translation,
         public Collection|null $seasons,
         public Collection $screenshots,

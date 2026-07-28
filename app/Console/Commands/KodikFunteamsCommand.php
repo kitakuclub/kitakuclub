@@ -51,8 +51,6 @@ class KodikFunteamsCommand extends Command
             )
         );
 
-        $this->newLine();
-
-        $this->info('success');
+        $this->info(' success');
     }
 }

@@ -7,6 +7,7 @@ namespace App\Console\Commands;
 use App\Enums\AnimeKind;
 use App\Enums\EntryRating;
 use App\Enums\EntryStatus;
+use App\Enums\SourceName;
 use App\Http\Integrations\Kodik\DTOs\MaterialDto;
 use App\Http\Integrations\Kodik\DTOs\SourceDto;
 use App\Http\Integrations\Kodik\KodikConnector;
@@ -37,15 +38,13 @@ class KodikAnimesCommand extends Command
     {
         $this->connector->query()->add('limit', 100);
         $this->connector->query()->add('types', 'anime,anime-serial');
+        $this->connector->query()->add('has_field', 'shikimori_id');
+        $this->connector->query()->add('sort', 'year');
+        $this->connector->query()->add('order', 'asc');
         $this->connector->query()->add('with_material_data', true);
-
-        /** @var string|null $next_page */
-        $next_page = null;
 
         do
         {
-            $this->connector->query()->add('next', $next_page);
-
             $res = $this->connector->send(
                 new GetMaterialsRequest
             );
@@ -55,45 +54,63 @@ class KodikAnimesCommand extends Command
 
             $this->withProgressBar(
                 $dto->results->toArray(),
-                function (MaterialDto $_anime) {
-
-                    $kind = $_anime->material_data->anime_kind ?? 'unknown';
-                    $rating = $_anime->material_data->rating_mpaa ?? 'unknown';
-                    $status = $_anime->material_data->anime_status ?? 'unknown';
-
-                    $anime = Anime::firstOrCreate(
-                        [
-                            'name' => $_anime->name,
-                        ],
-                        [
-                            'kind' => AnimeKind::from($kind),
-                            'rating' => EntryRating::fromKodik($rating),
-                            'status' => EntryStatus::from($status),
-                            'name' => $_anime->name,
-                            'slug' => uniqid(),
-                        ]
-                    );
-
-                    /** @var Collection<Source> $sources */
-                    $sources = new Collection;
+                static function (MaterialDto $_anime) {
 
                     if (is_null($_anime->sources))
                         return;
 
-                    $_anime->sources->each(fn(SourceDto $_source) => $sources->add(Source::make([
-                        'name' => $_source->name,
-                        'external_id' => $_source->external_id,
-                    ])));
+                    if (is_null($_anime->material_data))
+                        return; // @todo example serial-77299, serial-65126
 
-                    $sources->each(fn(Source $source) => $anime->sources()->updateOrCreate($source->toArray()));
+                    $name = $_anime->title;
+                    $kind = $_anime->material_data->anime_kind ?? 'unknown';
+                    $rating = $_anime->material_data->rating_mpaa ?? 'unknown';
+                    $status = $_anime->material_data->anime_status ?? 'unknown';
+
+                    /** @var Anime|null $anime */
+                    $anime = Anime::query()
+                        ->whereHasSources(
+                            filter_sources_by_names($_anime->sources, [
+                                SourceName::KODIK,
+                                SourceName::SHIKIMORI,
+                            ])
+                        )
+                        ->first();
+
+                    if (is_null($anime)) {
+                        /** @var Anime $anime */
+                        $anime = Anime::create([
+                            'name' => $name,
+                            'kind' => AnimeKind::from($kind),
+                            'rating' => EntryRating::fromKodik($rating),
+                            'status' => EntryStatus::from($status),
+                            'slug' => uniqid(),
+                        ]);
+                    }
+
+                    /** @var Collection<SourceDto> $_sources */
+                    $_sources = $_anime->sources->reject(
+                        static fn(SourceDto $_source) => $anime->sources->contains(
+                            static fn(Source $source) => $source->name === $_source->name
+                                                      && $source->external_id === $_source->external_id
+                        )
+                    );
+
+                    if ($_sources->isEmpty())
+                        return;
+
+                    $anime->sources()->saveMany(
+                        $_sources->map(static fn (SourceDto $_source) => Source::make([
+                            'name' => $_source->name,
+                            'external_id' => $_source->external_id,
+                        ]))
+                    );
                 }
             );
 
-            $this->newLine();
+            $this->connector->query()->add('next', $dto->next_page);
 
-            $this->info('success');
-
-            $next_page = $dto->next_page;
+            $this->info(' success');
         }
         while ($dto->next_page);
     }

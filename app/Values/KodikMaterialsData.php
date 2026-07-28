@@ -84,7 +84,7 @@ final readonly class KodikMaterialsData implements Arrayable
 
             /** @var Collection<SourceDto> $sources */
             $sources = new Collection(Arr::map(
-                Arr::only($item, ['imdb_id', 'kinopoisk_id', 'myanimelist_id', 'shikimori_id']),
+                Arr::only($item, ['imdb_id', 'kinopoisk_id', 'myanimelist_id', 'shikimori_id', 'id']),
                 static fn(string $external_id, string $name) => new SourceDto(
                     name: SourceName::fromKodik($name)->value,
                     external_id: $external_id,
@@ -97,6 +97,7 @@ final readonly class KodikMaterialsData implements Arrayable
                     ...Arr::only(
                         $item['material_data'],
                         [
+                            'title_en',
                             'anime_kind',
                             'anime_status',
                             'rating_mpaa',
@@ -108,7 +109,8 @@ final readonly class KodikMaterialsData implements Arrayable
             $results->add(new MaterialDto(
                 id: $item['id'],
                 link: $item['link'],
-                name: $item['title_orig'],
+                title: $item['title'],
+                title_orig: $item['title_orig'],
                 translation: $translation,
                 seasons: $seasons->isEmpty() ? null : $seasons,
                 screenshots: $screenshots,
