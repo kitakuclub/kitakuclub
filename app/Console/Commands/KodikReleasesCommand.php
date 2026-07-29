@@ -57,7 +57,7 @@ class KodikReleasesCommand extends Command
 
             $this->withProgressBar(
                 $dto->results->toArray(),
-                function (MaterialDto $_anime) use ($translations) {
+                static function (MaterialDto $_anime) use ($translations) {
 
                     if (is_null($_anime->sources))
                         return;
@@ -69,30 +69,38 @@ class KodikReleasesCommand extends Command
                         ])
                     );
 
-                    try {
-                        /** @var Anime $anime */
-                        $anime = $query->firstOrFail();
-                    } catch (\Exception $e) {
-                        $this->warn("Anime ($_anime->id) not found.");
+                    /** @var Anime|null $anime */
+                    $anime = $query->first();
+
+                    if (is_null($anime))
                         return;
+
+                    /** @var Translation|null $translation */
+                    $translation = $translations
+                        ->where('source', TranslationSource::KODIK)
+                        ->where('external_id', $_anime->translation->id)
+                        ->first();
+
+                    if (is_null($translation))
+                        return;
+
+                    /** @var Release|null $release */
+                    $release = $anime
+                        ->releases
+                        ->where('translation_id', $translation->id)
+                        ->where('external_id', $_anime->id)
+                        ->first();
+
+                    if (is_null($release)) {
+                        /** @var Release $release */
+                        $release = $anime->releases()->save(Release::make([
+                            'translation_id' => $translation->id,
+                            'external_id' => $_anime->id,
+                            'link' => $_anime->link
+                        ]));
                     }
 
-                    try {
-                        /** @var Translation $translation */
-                        $translation = $translations
-                            ->where('source', TranslationSource::KODIK)
-                            ->where('external_id', $_anime->translation->id)
-                            ->firstOrFail();
-                    } catch (\Exception $e) {
-                        $this->warn('Translation (' . json_encode($_anime->translation) . ') not found.');
-                        return;
-                    }
-
-                    $anime->releases()->save(Release::make([
-                        'translation_id' => $translation->id,
-                        'external_id' => $_anime->id,
-                        'link' => $_anime->link
-                    ]));
+                    //
                 }
             );
 

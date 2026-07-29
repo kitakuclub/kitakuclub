@@ -24,6 +24,8 @@ return new class extends Migration
         Schema::table('releases', function (Blueprint $table) {
             $table->bigInteger('translation_id', false, true)->after('id');
             $table->foreign('translation_id', 'fk_releases_on_translation_id')->references('id')->on('translations');
+
+            $table->unique(['translation_id', 'external_id'], 'unq_releases_on_translation_id_and_external_id');
         });
     }
 
