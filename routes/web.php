@@ -11,7 +11,8 @@ Route::get('/', function () {
     dd(
         $anime->toArray(),
         $anime->releases->toArray(),
-        $anime->releases[2]->funteam->toArray(),
+        $anime->releases[10]->funteam->toArray(),
+        $anime->releases[10]->episodes->toArray(),
     );
 
     return view('welcome');

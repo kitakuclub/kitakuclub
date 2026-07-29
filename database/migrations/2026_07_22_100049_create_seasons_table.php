@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('seasons', function (Blueprint $table) {
             $table->id();
-            $table->integer('number', false, true);
+            $table->tinyInteger('number');
             $table->string('link');
             $table->timestamps();
         });

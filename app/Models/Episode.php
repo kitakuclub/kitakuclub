@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Models\Concerns\Episodes\HasEpisodeRelationships;
 use Database\Factories\EpisodeFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
@@ -15,5 +16,5 @@ use Illuminate\Database\Eloquent\Model;
 class Episode extends Model
 {
     /** @use HasFactory<EpisodeFactory> */
-    use HasFactory;
+    use HasFactory, HasEpisodeRelationships;
 }

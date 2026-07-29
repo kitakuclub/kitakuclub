@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('episodes', function (Blueprint $table) {
             $table->id();
-            $table->integer('number', false, true)->default(0);
+            $table->smallInteger('number');
             $table->string('link');
             $table->timestamps();
         });

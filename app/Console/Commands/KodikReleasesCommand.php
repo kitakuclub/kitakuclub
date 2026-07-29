@@ -7,9 +7,11 @@ namespace App\Console\Commands;
 use App\Enums\SourceName;
 use App\Enums\TranslationSource;
 use App\Http\Integrations\Kodik\DTOs\MaterialDto;
+use App\Http\Integrations\Kodik\DTOs\SeasonDto;
 use App\Http\Integrations\Kodik\KodikConnector;
 use App\Http\Integrations\Kodik\Requests\GetMaterialsRequest;
 use App\Models\Anime;
+use App\Models\Episode;
 use App\Models\Release;
 use App\Models\Translation;
 use App\Values\KodikMaterialsData;
@@ -100,7 +102,62 @@ class KodikReleasesCommand extends Command
                         ]));
                     }
 
-                    //
+                    /** @var Collection<SeasonDto>|null $_seasons */
+                    $_seasons = $_anime->seasons;
+
+                    if (is_null($_seasons) || $_seasons->isEmpty())
+                        return;
+
+                    // 1. Upsert сезонов одним запросом
+                    $release->seasons()->upsert(
+                        $_seasons->map(fn (SeasonDto $_season) => [
+                            'release_id' => $release->id,
+                            'number' => $_season->number,
+                            'link' => $_season->link,
+                        ])->toArray(),
+                        uniqueBy: ['release_id', 'number'],
+                        update: ['link'],
+                    );
+
+                    // 2. Подтягиваем id сезонов, чтобы связать с эпизодами
+                    $seasonsByNumber = $release->seasons()
+                        ->get(['id', 'number'])
+                        ->keyBy('number');
+
+                    // 3. Собираем эпизоды всех сезонов в один плоский массив
+                    $episodesRows = $_seasons->flatMap(
+                        function (SeasonDto $_season) use ($seasonsByNumber) {
+                            $season = $seasonsByNumber->get($_season->number);
+
+                            if (is_null($season) || is_null($_season->episodes))
+                                return [];
+
+                            return $_season->episodes->map(fn ($_episode) => [
+                                'season_id' => $season->id,
+                                'number' => $_episode->number,
+                                'link' => $_episode->link,
+                            ]);
+                        }
+                    );
+
+                    if ($episodesRows->isEmpty())
+                        return;
+
+                    // 4. Upsert эпизодов одним запросом
+                    Episode::query()->upsert(
+                        $episodesRows->toArray(),
+                        uniqueBy: ['season_id', 'number'],
+                        update: ['link'],
+                    );
+
+                    // 5. Подтягиваем id эпизодов по season_id, чтобы связать с релизом
+                    $episodeIds = Episode::query()
+                        ->whereIn('season_id', $seasonsByNumber->pluck('id'))
+                        ->pluck('id');
+
+                    // 6. Upsert связей release <-> episode в pivot-таблицу
+                    if ($episodeIds->isNotEmpty())
+                        $release->episodes()->syncWithoutDetaching($episodeIds);
                 }
             );
 
