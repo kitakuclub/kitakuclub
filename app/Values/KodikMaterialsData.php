@@ -97,10 +97,15 @@ final readonly class KodikMaterialsData implements Arrayable
                     ...Arr::only(
                         $item['material_data'],
                         [
-                            'title_en',
                             'anime_kind',
                             'anime_status',
                             'rating_mpaa',
+                            'aired_at',
+                            'released_at',
+                            'episodes_total',
+                            'episodes_aired',
+                            'duration',
+                            'next_episode_at',
                         ]
                     )
                 )

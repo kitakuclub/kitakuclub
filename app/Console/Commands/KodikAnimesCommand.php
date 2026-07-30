@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace App\Console\Commands;
 
-use App\Enums\AnimeKind;
-use App\Enums\EntryRating;
-use App\Enums\EntryStatus;
 use App\Enums\SourceName;
 use App\Http\Integrations\Kodik\DTOs\MaterialDto;
 use App\Http\Integrations\Kodik\DTOs\SourceDto;
@@ -14,6 +11,8 @@ use App\Http\Integrations\Kodik\KodikConnector;
 use App\Http\Integrations\Kodik\Requests\GetMaterialsRequest;
 use App\Models\Anime;
 use App\Models\Source;
+use App\Values\AnimeCreateData;
+use App\Values\AnimeUpdateData;
 use App\Values\KodikMaterialsData;
 use Illuminate\Console\Attributes\Description;
 use Illuminate\Console\Attributes\Signature;
@@ -62,11 +61,6 @@ class KodikAnimesCommand extends Command
                     if (is_null($_anime->material_data))
                         return; // @todo example serial-77299, serial-65126
 
-                    $name = $_anime->title;
-                    $kind = $_anime->material_data->anime_kind ?? 'unknown';
-                    $rating = $_anime->material_data->rating_mpaa ?? 'unknown';
-                    $status = $_anime->material_data->anime_status ?? 'unknown';
-
                     /** @var Anime|null $anime */
                     $anime = Anime::query()
                         ->whereHasSources(
@@ -77,16 +71,14 @@ class KodikAnimesCommand extends Command
                         )
                         ->first();
 
-                    if (is_null($anime)) {
-                        /** @var Anime $anime */
-                        $anime = Anime::create([
-                            'name' => $name,
-                            'kind' => AnimeKind::from($kind),
-                            'rating' => EntryRating::fromKodik($rating),
-                            'status' => EntryStatus::from($status),
-                            'slug' => uniqid(),
-                        ]);
-                    }
+                    /** @var Anime $anime */
+                    $anime = is_null($anime)
+                        ? Anime::create(
+                            AnimeCreateData::fromKodik($_anime)->toArray()
+                        )
+                        : tap($anime, fn(Anime $a) => $a->update(
+                            AnimeUpdateData::fromKodik($_anime)->toArray()
+                        ))->refresh();
 
                     /** @var Collection<SourceDto> $_sources */
                     $_sources = $_anime->sources->reject(

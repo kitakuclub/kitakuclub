@@ -13,7 +13,19 @@ use Illuminate\Database\Eloquent\Attributes\UseEloquentBuilder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-#[Fillable(['kind', 'rating', 'status', 'name', 'slug'])]
+#[Fillable([
+    'kind',
+    'rating',
+    'status',
+    'name',
+    'slug',
+    'aired_at',
+    'released_at',
+    'episodes_total',
+    'episodes_aired',
+    'duration',
+    'next_episode_at',
+])]
 #[UseEloquentBuilder(AnimeBuilder::class)]
 class Anime extends Model
 {
