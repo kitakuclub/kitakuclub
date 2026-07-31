@@ -5,9 +5,14 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
 
-//    /** @var Anime $anime */
+//    \Illuminate\Support\Facades\DB::table('episode_release')->delete();
+//    \Illuminate\Support\Facades\DB::table('episodes')->delete();
+//    \Illuminate\Support\Facades\DB::table('seasons')->delete();
+//    \Illuminate\Support\Facades\DB::table('releases')->delete();
+
+    /** @var Anime $anime */
     $anime = Anime::with(['sources'])->findOrFail($_GET['anime']);
-//\Illuminate\Support\Facades\DB::table('releases')->delete();
+
     dd(
         $anime->toArray(),
         $anime->releases->toArray(),

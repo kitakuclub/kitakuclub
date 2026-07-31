@@ -121,7 +121,7 @@ class KodikReleasesCommand extends Command
                             'link' => $_season->link,
                         ])->toArray(),
                         uniqueBy: ['release_id', 'number'],
-                        update: ['link'],
+                        update: [],
                     );
 
                     // 2. Подтягиваем id сезонов, чтобы связать с эпизодами
@@ -153,7 +153,7 @@ class KodikReleasesCommand extends Command
                     Episode::query()->upsert(
                         $episodesRows->toArray(),
                         uniqueBy: ['season_id', 'number'],
-                        update: ['link'],
+                        update: [],
                     );
 
                     // 5. Подтягиваем id эпизодов по season_id, чтобы связать с релизом
