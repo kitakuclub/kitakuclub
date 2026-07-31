@@ -59,7 +59,9 @@ class KodikTranslationsCommand extends Command
                 static function (MaterialDto $_anime) use ($funteams) {
 
                     /** @var Funteam $funteam */
-                    $funteam = $funteams->where('name', Str::lower($_anime->translation->title))->firstOrFail();
+                    $funteam = $funteams
+                        ->where('name', Str::lower($_anime->translation->title))
+                        ->firstOrFail();
 
                     Translation::firstOrCreate(
                         [

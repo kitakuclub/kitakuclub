@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Builders;
 
+use App\Enums\SourceName;
+use App\Http\Integrations\Kodik\DTOs\SourceDto;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 
@@ -32,6 +34,19 @@ class AnimeBuilder extends Builder
                     }
                 );
             }
+        );
+    }
+
+    public function whereHasSourcesByNames(iterable $sources, array $allowedNames): self
+    {
+        return $this->whereHasSources(
+            $sources->filter(
+                static fn(SourceDto $source) => in_array(
+                    SourceName::tryFrom($source->name),
+                    $allowedNames,
+                    true
+                )
+            )
         );
     }
 }

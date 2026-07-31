@@ -63,11 +63,12 @@ class KodikAnimesCommand extends Command
 
                     /** @var Anime|null $anime */
                     $anime = Anime::query()
-                        ->whereHasSources(
-                            filter_sources_by_names($_anime->sources, [
+                        ->whereHasSourcesByNames(
+                            $_anime->sources,
+                            [
                                 SourceName::KODIK,
                                 SourceName::SHIKIMORI,
-                            ])
+                            ]
                         )
                         ->first();
 

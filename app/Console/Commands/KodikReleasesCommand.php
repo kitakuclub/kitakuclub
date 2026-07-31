@@ -64,15 +64,16 @@ class KodikReleasesCommand extends Command
                     if (is_null($_anime->sources))
                         return;
 
-                    $query = Anime::query()->whereHasSources(
-                        filter_sources_by_names($_anime->sources, [
-                            SourceName::KODIK,
-                            SourceName::SHIKIMORI,
-                        ])
-                    );
-
                     /** @var Anime|null $anime */
-                    $anime = $query->first();
+                    $anime = Anime::query()
+                        ->whereHasSourcesByNames(
+                            $_anime->sources,
+                            [
+                                SourceName::KODIK,
+                                SourceName::SHIKIMORI,
+                            ]
+                        )
+                        ->first();
 
                     if (is_null($anime))
                         return;
@@ -95,11 +96,15 @@ class KodikReleasesCommand extends Command
 
                     if (is_null($release)) {
                         /** @var Release $release */
-                        $release = $anime->releases()->save(Release::make([
-                            'translation_id' => $translation->id,
-                            'external_id' => $_anime->id,
-                            'link' => $_anime->link
-                        ]));
+                        $release = $anime
+                            ->releases()
+                            ->save(
+                                Release::make([
+                                    'translation_id' => $translation->id,
+                                    'external_id' => $_anime->id,
+                                    'link' => $_anime->link,
+                                ])
+                            );
                     }
 
                     /** @var Collection<SeasonDto>|null $_seasons */
@@ -120,7 +125,8 @@ class KodikReleasesCommand extends Command
                     );
 
                     // 2. Подтягиваем id сезонов, чтобы связать с эпизодами
-                    $seasonsByNumber = $release->seasons()
+                    $seasonsByNumber = $release
+                        ->seasons()
                         ->get(['id', 'number'])
                         ->keyBy('number');
 
