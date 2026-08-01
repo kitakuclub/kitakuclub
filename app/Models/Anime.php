@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Builders\AnimeBuilder;
+use App\Casts\AnimeKindCast;
+use App\Casts\AnimeStatusCast;
 use App\Models\Concerns\MorphsToReleases;
 use App\Models\Concerns\MorphsToSources;
 use Database\Factories\AnimeFactory;
@@ -39,7 +41,12 @@ class Anime extends Model
      */
     protected function casts(): array
     {
-        return [];
+        return [
+            'kind' => AnimeKindCast::class,
+            'status' => AnimeStatusCast::class,
+            'aired_at' => 'datetime',
+            'next_episode_at' => 'datetime',
+        ];
     }
 
     // @mago-ignore lint:no-redundant-method-override

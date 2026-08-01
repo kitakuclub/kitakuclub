@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('rating');
             $table->string('status');
             $table->string('name');
-            $table->string('slug')->unique('unq_animes_on_slug');
+            $table->string('slug');
             $table->date('aired_at')->nullable();
             $table->date('released_at')->nullable();
             $table->smallInteger('episodes_total', false, true);
@@ -27,6 +27,10 @@ return new class extends Migration
             $table->tinyInteger('duration', false, true);
             $table->dateTime('next_episode_at')->nullable();
             $table->timestamps();
+        });
+
+        Schema::table('animes', function (Blueprint $table) {
+            $table->unique(['id', 'slug'], 'unq_animes_on_id_and_slug');
         });
     }
 

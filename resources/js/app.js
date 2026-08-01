@@ -1,1 +1,1 @@
-//
+import '@tabler/core';
