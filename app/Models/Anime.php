@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\AnimePosterPathGenerator;
 use App\Builders\AnimeBuilder;
 use App\Casts\AnimeKindCast;
 use App\Casts\AnimeStatusCast;
@@ -14,6 +15,10 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\UseEloquentBuilder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\MediaCollections\Exceptions\InvalidPathGenerator;
+use Spatie\MediaLibrary\Support\PathGenerator\PathGeneratorFactory;
 
 #[Fillable([
     'kind',
@@ -29,10 +34,19 @@ use Illuminate\Database\Eloquent\Model;
     'next_episode_at',
 ])]
 #[UseEloquentBuilder(AnimeBuilder::class)]
-class Anime extends Model
+class Anime extends Model implements HasMedia
 {
     /** @use HasFactory<AnimeFactory> */
-    use HasFactory, MorphsToSources, MorphsToReleases;
+    use HasFactory, InteractsWithMedia, MorphsToSources, MorphsToReleases;
+
+    /** @throws InvalidPathGenerator */
+    protected static function booting(): void
+    {
+        PathGeneratorFactory::setCustomPathGenerators(
+            static::class,
+            AnimePosterPathGenerator::class
+        );
+    }
 
     /**
      * Get the attributes that should be cast.
@@ -54,5 +68,14 @@ class Anime extends Model
     {
         /** @var AnimeBuilder */
         return parent::query();
+    }
+
+    public function registerMediaCollections(): void
+    {
+        $this
+            ->addMediaCollection('poster')
+            ->useFallbackUrl('https://shikimori.io/assets/globals/missing/main@2x.png')
+            ->useDisk('public')
+            ->singleFile();
     }
 }

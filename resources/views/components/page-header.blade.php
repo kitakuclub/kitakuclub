@@ -1,8 +1,8 @@
 @props(['title', 'description'])
 
-<div class="page-header">
+<div class="page-header mt-3">
     <div class="container">
-        <div class="page-title">{{ $title }}</div>
+        <h1 class="page-title">{{ $title }}</h1>
         <div class="text-secondary">{{ $description }}</div>
     </div>
 </div>

@@ -1,15 +1,18 @@
-@section('title', 'Каталог аниме')
+@php($title = 'Каталог аниме')
+@php($description = 'На странице вы найдете широкий выбор анимационных произведений от популярных сериалов до классических фильмов.')
+
+@section('title', 'Полный список, каталог аниме на Kitaku | Китаку')
 
 <x-layouts::main>
     <div class="container mt-4">
         {{ Breadcrumbs::render('animes.catalog') }}
     </div>
-    <x-page-header-animes-catalog />
+    <x-page-header :$title :$description />
     <div class="page-body">
         <div class="container">
 
             <!-- Сетка с автоматическим распределением колонок и отступами row-gap -->
-            <div class="row row-cols-2 row-cols-sm-3 row-cols-lg-4 g-4">
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
 
                 <style>
                     /* Базовые стили анимации для постера */
@@ -95,7 +98,11 @@
                 </style>
 
                 @foreach($animes_list as $anime)
-                    <a href="/animes/{{ $anime->id }}/{{ $anime->slug }}" class="col text-decoration-none" title="Смотреть {{ $anime->name }}">
+                    <a
+                        href="/animes/{{ $anime->id }}/{{ $anime->slug }}"
+                        class="col text-decoration-none"
+                        title="Смотреть {{ $anime->name }}"
+                    >
                         <div class="border-0 bg-transparent h-100 movie-card">
                             <div class="position-relative overflow-hidden rounded-3 card-media-wrap">
                                 @if($anime->next_episode_at)
@@ -114,16 +121,16 @@
                                     >
                                         <span class="text-white">
                                             @if(!$is_past)
-                                                след. серия выйдет
+                                                {{ $anime->episodes_aired + 1 }}-я серия выйдет
                                             @else
-                                                серия {{ $anime->episodes_aired }} вышла
+                                                {{ $anime->episodes_aired }}-я серия вышла
                                             @endif
                                             <b>{{ $anime->next_episode_at->ago() }}</b>
                                         </span>
                                     </div>
                                 @endif
                                 <img
-                                    src="https://cdn.myanimelist.net/images/anime/1145/158339.jpg"
+                                    src="{{ $anime->getFirstMediaUrl('poster') }}"
                                     class="card-img-top img-fluid transition-zoom"
                                     alt="Постер"
                                 >
