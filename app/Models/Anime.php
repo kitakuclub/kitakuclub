@@ -56,6 +56,7 @@ class Anime extends Model implements HasMedia
     protected function casts(): array
     {
         return [
+            'id' => 'integer',
             'kind' => AnimeKindCast::class,
             'status' => AnimeStatusCast::class,
             'aired_at' => 'datetime',
@@ -74,7 +75,7 @@ class Anime extends Model implements HasMedia
     {
         $this
             ->addMediaCollection('poster')
-            ->useFallbackUrl('https://shikimori.io/assets/globals/missing/main@2x.png')
+            ->useFallbackUrl(asset(config('noilty.shikimori_host') . '/assets/globals/missing/main@2x.png'))
             ->useDisk('public')
             ->singleFile();
     }

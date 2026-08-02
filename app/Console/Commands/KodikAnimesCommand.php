@@ -14,12 +14,10 @@ use App\Models\Source;
 use App\Values\AnimeCreateData;
 use App\Values\AnimeUpdateData;
 use App\Values\KodikMaterialsData;
-use GuzzleHttp\Cookie\CookieJar;
 use Illuminate\Console\Attributes\Description;
 use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Http;
 
 #[Signature('kodik:animes')]
 #[Description('Command description')]
@@ -40,8 +38,8 @@ class KodikAnimesCommand extends Command
         $this->connector->query()->add('limit', 100);
         $this->connector->query()->add('types', 'anime,anime-serial');
         $this->connector->query()->add('has_field', 'shikimori_id');
-        $this->connector->query()->add('sort', 'year');
-        $this->connector->query()->add('order', 'asc');
+        $this->connector->query()->add('sort', 'updated_at');
+        $this->connector->query()->add('order', 'desc');
         $this->connector->query()->add('with_material_data', true);
 
         do
@@ -82,28 +80,6 @@ class KodikAnimesCommand extends Command
                         : tap($anime, fn(Anime $a) => $a->update(
                             AnimeUpdateData::fromKodik($_anime)->toArray()
                         ))->refresh();
-
-                    if (! $anime->hasMedia('poster')) {
-
-                        $poster_url = $_anime->material_data->poster_url;
-
-                        if (! is_null($poster_url)) {
-                            $response = Http::withOptions(['cookies' => new CookieJar()])->get($poster_url);
-
-                            if ($response->successful()) {
-                                $extension = pathinfo(
-                                    parse_url($poster_url, PHP_URL_PATH),
-                                    PATHINFO_EXTENSION
-                                ) ?: 'jpeg';
-
-                                $anime
-                                    ->addMediaFromString($response->body())
-                                    ->usingFileName(($name = hash('md5', uniqid(strval(time()), true))) . '.' . $extension)
-                                    ->usingName($name)
-                                    ->toMediaCollection('poster');
-                            }
-                        }
-                    }
 
                     /** @var Collection<SourceDto> $_sources */
                     $_sources = $_anime->sources->reject(

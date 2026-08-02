@@ -95,6 +95,12 @@
                     .vfx-glare {
                         z-index: 3;
                     }
+
+                    .card-img-top {
+                        width: 100%;
+                        aspect-ratio: 2 / 3;
+                        object-fit: cover;
+                    }
                 </style>
 
                 @foreach($animes_list as $anime)
@@ -105,6 +111,20 @@
                     >
                         <div class="border-0 bg-transparent h-100 movie-card">
                             <div class="position-relative overflow-hidden rounded-3 card-media-wrap">
+
+                                <div
+                                    class="ribbon ribbon-start rounded-end-5"
+                                    style="background-color: {{ $anime->status->color() }};"
+                                >
+                                    <span class="h4 m-0">{{ $anime->status->label() }}</span>
+                                </div>
+
+                                <img
+                                    src="{{ $anime->getFirstMediaUrl('poster') }}"
+                                    class="card-img-top img-fluid transition-zoom"
+                                    alt="Постер"
+                                >
+
                                 @if($anime->next_episode_at)
                                     @php($is_past = $anime->next_episode_at->isPast())
                                     <div
@@ -113,11 +133,11 @@
                                             'badge',
                                             'w-100',
                                             'position-absolute',
-                                            'rounded-bottom-0',
+                                            'rounded-top-0',
                                             'bg-pink' => !$is_past,
                                             'bg-green' => $is_past,
                                         ])
-                                        style="z-index: 999;"
+                                        style="z-index: 999; bottom: 0;"
                                     >
                                         <span class="text-white">
                                             @if(!$is_past)
@@ -129,11 +149,6 @@
                                         </span>
                                     </div>
                                 @endif
-                                <img
-                                    src="{{ $anime->getFirstMediaUrl('poster') }}"
-                                    class="card-img-top img-fluid transition-zoom"
-                                    alt="Постер"
-                                >
 
                                 <!-- Иконка Play по центру (SVG для независимости от сторонних шрифтов) -->
                                 <div class="play-overlay d-flex align-items-center justify-content-center">
@@ -142,13 +157,6 @@
                                             <path d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z"/>
                                         </svg>
                                     </div>
-                                </div>
-
-                                <div
-                                    class="ribbon ribbon-start ribbon-bottom rounded-end-5"
-                                    style="background-color: {{ $anime->status->color() }};"
-                                >
-                                    <span class="h4 m-0">{{ $anime->status->label() }}</span>
                                 </div>
 
                                 <div class="vfx-glare"></div>
