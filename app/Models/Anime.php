@@ -7,12 +7,15 @@ namespace App\Models;
 use App\AnimePosterPathGenerator;
 use App\Builders\AnimeBuilder;
 use App\Casts\AnimeKindCast;
+use App\Casts\AnimeRatingCast;
 use App\Casts\AnimeStatusCast;
+use App\Enums\EntrySeason;
 use App\Models\Concerns\MorphsToReleases;
 use App\Models\Concerns\MorphsToSources;
 use Database\Factories\AnimeFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\UseEloquentBuilder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\MediaLibrary\HasMedia;
@@ -42,9 +45,13 @@ class Anime extends Model implements HasMedia
     /** @throws InvalidPathGenerator */
     protected static function booting(): void
     {
-        PathGeneratorFactory::setCustomPathGenerators(
-            static::class,
-            AnimePosterPathGenerator::class
+        PathGeneratorFactory::setCustomPathGenerators(static::class, AnimePosterPathGenerator::class);
+    }
+
+    protected function airedSeason(): Attribute
+    {
+        return Attribute::get(
+            fn() => EntrySeason::fromMonth($this->aired_at->month)->value
         );
     }
 
@@ -58,6 +65,7 @@ class Anime extends Model implements HasMedia
         return [
             'id' => 'integer',
             'kind' => AnimeKindCast::class,
+            'rating' => AnimeRatingCast::class,
             'status' => AnimeStatusCast::class,
             'aired_at' => 'datetime',
             'next_episode_at' => 'datetime',

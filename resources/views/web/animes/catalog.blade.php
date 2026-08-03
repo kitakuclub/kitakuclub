@@ -105,7 +105,7 @@
 
                 @foreach($animes_list as $anime)
                     <a
-                        href="/animes/{{ $anime->id }}/{{ $anime->slug }}"
+                        href="{{ route('animes.show', [$anime, $anime->slug]) }}"
                         class="col text-decoration-none"
                         title="Смотреть {{ $anime->name }}"
                     >

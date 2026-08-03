@@ -10,5 +10,6 @@ Route::group(['prefix' => '/animes', 'as' => 'animes'], function () {
 
     Route::get('/', [AnimeController::class, 'index']);
     Route::get('/catalog', [AnimeCatalogController::class, 'index'])->name('.catalog');
+    Route::get('/{anime}/{slug}', [AnimeController::class, 'show'])->name('.show');
 
 });
