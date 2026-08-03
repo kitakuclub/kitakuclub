@@ -399,7 +399,7 @@
                                     @php($episodes_count = $release->episodes->count())
                                     @php($episodes_aired = $episodes_count >= $anime->episodes_aired)
                                     <div class="col">
-                                        <a href="/watch?d={{ uniqid() }}" class="btn">
+                                        <a href="/watch?r={{ $release->code }}" class="btn">
                                             <svg
                                                 xmlns="http://www.w3.org/2000/svg"
                                                 width="24"
@@ -449,7 +449,7 @@
                                     @php($episodes_count = $release->episodes->count())
                                     @php($episodes_aired = $episodes_count >= $anime->episodes_aired)
                                     <div class="col">
-                                        <a href="/watch?s={{ uniqid() }}" class="btn">
+                                        <a href="/watch?r={{ $release->code }}" class="btn">
                                             <svg
                                                 xmlns="http://www.w3.org/2000/svg"
                                                 width="24"

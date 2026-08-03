@@ -10,11 +10,12 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 /**
  * @property Funteam $funteam
  */
-#[Fillable(['translation_id', 'external_id', 'link'])]
+#[Fillable(['translation_id', 'code', 'external_id', 'link'])]
 #[Hidden(['translation_id', 'releasable_type', 'releasable_id'])]
 class Release extends Model
 {
@@ -26,5 +27,10 @@ class Release extends Model
     public function getFunteamAttribute()
     {
         return $this->translation->funteam;
+    }
+
+    public function releasable(): MorphTo
+    {
+        return $this->morphTo();
     }
 }
