@@ -1,6 +1,4 @@
-@php($title = 'Kitaku | Китаку — Аниме')
-
-@section('title', $title)
+@section('title', config('app.name') . ' — Аниме')
 
 <x-layouts::main>
     <div class="container mt-4">

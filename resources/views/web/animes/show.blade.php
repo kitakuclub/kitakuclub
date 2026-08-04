@@ -1,8 +1,6 @@
 @php use App\Models\Release; @endphp
 
-@php($title = $anime->name . ' — Аниме на Kitaku | Китаку')
-
-@section('title', $title)
+@section('title', $anime->name . ' на ' . config('app.name'))
 
 <x-layouts::main>
     <div class="container mt-4 position-absolute" style="z-index: 999; left: 50%; transform: translateX(-50%);">
@@ -460,7 +458,8 @@
                                                 stroke-width="2"
                                                 stroke-linecap="round"
                                                 stroke-linejoin="round"
-                                                class="icon icon-tabler icons-tabler-outline icon-tabler-badge-cc">
+                                                class="icon icon-tabler icons-tabler-outline icon-tabler-badge-cc"
+                                            >
                                                 <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
                                                 <path d="M3 7a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-10"/>
                                                 <path d="M10 10.5a1.5 1.5 0 0 0 -3 0v3a1.5 1.5 0 0 0 3 0"/>

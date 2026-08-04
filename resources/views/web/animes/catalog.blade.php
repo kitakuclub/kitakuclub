@@ -1,7 +1,7 @@
 @php($title = 'Каталог аниме')
 @php($description = 'На странице вы найдете широкий выбор анимационных произведений от популярных сериалов до классических фильмов.')
 
-@section('title', 'Полный список, каталог аниме на Kitaku | Китаку')
+@section('title', config('app.name') . ' — Аниме каталог')
 
 <x-layouts::main>
     <div class="container mt-4">
