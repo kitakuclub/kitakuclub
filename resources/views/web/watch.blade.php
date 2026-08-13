@@ -320,7 +320,7 @@
                     >
                         <iframe
                             id="playerFrame"
-                            src=""
+                            src="{{ $release->link }}?translations=false&only_season=true"
                             class="shadow"
                             width="100%"
                             height="600"
@@ -465,7 +465,7 @@
                     const $root = $('#playerRoot');
 
                     const episodesArr = $root.data('episodes'); // @todo сделать через api
-                    const ACTIVE_EPISODE = Number($root.data('current'));
+                    const ACTIVE_EPISODE = getActiveEpisode($root.data('current'));
 
                     const $epList = $('#epList');
                     const $currentEp = $('#currentEp');
@@ -476,6 +476,15 @@
                     const $epSearchInput = $('#epSearchInput');
                     const $epSearchResults = $('#epSearchResults');
                     const $playerFrame = $('#playerFrame');
+
+                    function getReleaseCode() {
+                        const params = new URLSearchParams(window.location.search);
+                        return params.get('r');
+                    }
+
+                    function getActiveEpisode(curr) {
+                        return Number(localStorage.getItem(getReleaseCode()) ?? curr);
+                    }
 
                     function findEpisode(n) {
                         return episodesArr.find(e => Number(e.number) === Number(n));
@@ -497,6 +506,7 @@
                         const url = new URL('https:' + ep.link);
 
                         url.searchParams.set('translations', 'false');
+                        url.searchParams.set('hide_resume_button', 'true');
 
                         $(iframe).attr('src', url.toString());
                     }
@@ -510,6 +520,7 @@
                         $currentEp.text(n);
 
                         setPlayerEpisode(n);
+                        setWatchEpisode(getReleaseCode(), n);
 
                         // докручиваем список так, чтобы выбранная серия была видна
                         const $activeBtn = $epList.find('.ep-item.active');
@@ -518,6 +529,12 @@
                             const target = $activeBtn[0].offsetLeft - ($epScroll.width() / 2) + ($activeBtn.width() / 2);
                             $epScroll[0].scrollTo({left: Math.max(0, target), behavior: 'smooth'});
                         }
+                    }
+
+                    function updateArrows() {
+                        const el = $epScroll[0];
+                        $scrollPrev.prop('disabled', el.scrollLeft <= 0);
+                        $scrollNext.prop('disabled', el.scrollLeft + el.clientWidth >= el.scrollWidth - 1);
                     }
 
                     function closeDropdown() {
@@ -549,6 +566,16 @@
                                     closeDropdown();
                                 })
                                 .appendTo($epSearchResults);
+                        });
+                    }
+
+                    function setWatchEpisode(code) {
+                        $epList.find('.ep-item').each(function () {
+                            const $el = $(this);
+
+                            if ($el.hasClass('active')) {
+                                localStorage.setItem(code, $el.data('ep'));
+                            }
                         });
                     }
 
@@ -597,12 +624,8 @@
                             .appendTo($epList);
                     });
 
-                    function updateArrows() {
-                        const el = $epScroll[0];
-
-                        $scrollPrev.prop('disabled', el.scrollLeft <= 0);
-                        $scrollNext.prop('disabled', el.scrollLeft + el.clientWidth >= el.scrollWidth - 1);
-                    }
+                    $('button.watched-btn').on('click', () => alert('Your not is logged in.'));
+                    $('button.bell-btn').on('click', () => alert('Your not is logged in.'));
 
                     $scrollPrev.on('click', () => $epScroll[0].scrollBy({left: -160, behavior: 'smooth'}));
                     $scrollNext.on('click', () => $epScroll[0].scrollBy({left: 160, behavior: 'smooth'}));

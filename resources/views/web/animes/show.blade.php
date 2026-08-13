@@ -86,8 +86,7 @@
                                         <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
                                         <path d="M8 9h8"/>
                                         <path d="M8 13h6"/>
-                                        <path
-                                            d="M12.01 18.594l-4.01 2.406v-3h-2a3 3 0 0 1 -3 -3v-8a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v5.5"/>
+                                        <path d="M12.01 18.594l-4.01 2.406v-3h-2a3 3 0 0 1 -3 -3v-8a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v5.5"/>
                                         <path d="M16 19h6"/>
                                         <path d="M19 16v6"/>
                                     </svg>
@@ -113,7 +112,8 @@
                                         stroke-width="2"
                                         stroke-linecap="round"
                                         stroke-linejoin="round"
-                                        class="icon icon-tabler icons-tabler-outline icon-tabler-pencil-plus">
+                                        class="icon icon-tabler icons-tabler-outline icon-tabler-pencil-plus"
+                                    >
                                         <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
                                         <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4"/>
                                         <path d="M13.5 6.5l4 4"/>
@@ -141,8 +141,7 @@
                                         class="icon icon-tabler icons-tabler-filled icon-tabler-star"
                                     >
                                         <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                                        <path
-                                            d="M8.243 7.34l-6.38 .925l-.113 .023a1 1 0 0 0 -.44 1.684l4.622 4.499l-1.09 6.355l-.013 .11a1 1 0 0 0 1.464 .944l5.706 -3l5.693 3l.1 .046a1 1 0 0 0 1.352 -1.1l-1.091 -6.355l4.624 -4.5l.078 -.085a1 1 0 0 0 -.633 -1.62l-6.38 -.926l-2.852 -5.78a1 1 0 0 0 -1.794 0l-2.853 5.78z"/>
+                                        <path d="M8.243 7.34l-6.38 .925l-.113 .023a1 1 0 0 0 -.44 1.684l4.622 4.499l-1.09 6.355l-.013 .11a1 1 0 0 0 1.464 .944l5.706 -3l5.693 3l.1 .046a1 1 0 0 0 1.352 -1.1l-1.091 -6.355l4.624 -4.5l.078 -.085a1 1 0 0 0 -.633 -1.62l-6.38 -.926l-2.852 -5.78a1 1 0 0 0 -1.794 0l-2.853 5.78z"/>
                                     </svg>
                                 </a>
                             </div>
@@ -169,8 +168,7 @@
                                         class="icon icon-tabler icons-tabler-outline icon-tabler-settings"
                                     >
                                         <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                                        <path
-                                            d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065"/>
+                                        <path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065"/>
                                         <path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"/>
                                     </svg>
                                 </a>
@@ -199,8 +197,7 @@
                                                 >
                                                     <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
                                                     <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0"/>
-                                                    <path
-                                                        d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6"/>
+                                                    <path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6"/>
                                                 </svg>
                                                 <span><b class="h3 ms-3">Смотрю</b></span>
                                             </div>
@@ -385,9 +382,10 @@
 
                         @php($releases = $anime->releases)
 
-                        @php($releases_dub = $releases->filter(
-                            static fn(Release $release) => $release->translation->kind === 'dub'
-                        ))
+                        @php($releases_dub = $releases
+                            ->filter(static fn(Release $release) => $release->translation->kind === 'dub')
+                            ->sortBy(static fn(Release $release) => $release->translation->funteam->name)
+                        )
 
                         @if($releases_dub->isNotEmpty())
                         <div class="col-12 mb-3">
@@ -435,9 +433,10 @@
                         </div>
                         @endif
 
-                        @php($releases_sub = $releases->filter(
-                            static fn(Release $release) => $release->translation->kind === 'sub'
-                        ))
+                        @php($releases_sub = $releases
+                            ->filter(static fn(Release $release) => $release->translation->kind === 'sub')
+                            ->sortBy(static fn(Release $release) => $release->translation->funteam->name)
+                        )
 
                         @if($releases_sub->isNotEmpty())
                         <div class="col-12">

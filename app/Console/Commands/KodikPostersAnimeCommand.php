@@ -17,9 +17,9 @@ use Illuminate\Console\Command;
 use Illuminate\Http\Client\Pool;
 use Illuminate\Support\Facades\Http;
 
-#[Signature('kodik:animes:poster')]
+#[Signature('kodik:posters:anime')]
 #[Description('Command description')]
-class KodikAnimesPosterCommand extends Command
+class KodikPostersAnimeCommand extends Command
 {
     public function __construct(
         private readonly KodikConnector $connector,
