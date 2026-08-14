@@ -14,7 +14,12 @@ class AnimeCatalogController extends Controller
      */
     public function index()
     {
-        $animes_list = Anime::orderBy('aired_at', 'desc')->paginate(32);
+        $q = Anime::query();
+
+        $q->orderBy('aired_at', 'desc');
+        $q->orderBy('created_at');
+
+        $animes_list = $q->paginate(32);
 
         return view('web.animes.catalog', compact('animes_list'));
     }

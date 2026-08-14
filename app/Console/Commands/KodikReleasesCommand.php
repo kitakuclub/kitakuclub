@@ -21,7 +21,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 
-#[Signature('kodik:releases')]
+#[Signature('kodik:releases:anime')]
 #[Description('Command description')]
 class KodikReleasesCommand extends Command
 {
