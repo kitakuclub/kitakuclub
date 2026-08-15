@@ -334,12 +334,11 @@
                                 <div class="line">
                                     <div class="key">Сезон</div>
                                     <div class="value">
-                                        @php($year = $anime->aired_at->format('Y'))
-                                        @php($month_name = $anime->aired_at->monthName)
                                         <a
-                                            href="{{ route('animes.search', ['year' => $year,  'season' => $anime->aired_season]) }}"
+                                            href="{{ route('animes.search', ['year' => $anime->aired_year,  'season' => $anime->aired_season]) }}"
                                         >
-                                            {{ $month_name }} {{ $year }}
+                                            {{ $anime->aired_at->monthName }}
+                                            {{ $anime->aired_year }}
                                         </a>
                                     </div>
                                 </div>
@@ -403,7 +402,10 @@
                                     @php($episodes_count = $release->episodes->count())
                                     @php($episodes_aired = $episodes_count >= $anime->episodes_aired)
                                     <div class="col">
-                                        <a href="/watch?r={{ $release->code }}" class="btn">
+                                        <a
+                                            href="{{ route('watch', ['r' => $release->code]) }}"
+                                            class="btn"
+                                        >
                                             <svg
                                                 xmlns="http://www.w3.org/2000/svg"
                                                 width="24"
@@ -454,7 +456,10 @@
                                     @php($episodes_count = $release->episodes->count())
                                     @php($episodes_aired = $episodes_count >= $anime->episodes_aired)
                                     <div class="col">
-                                        <a href="/watch?r={{ $release->code }}" class="btn">
+                                        <a
+                                            href="{{ route('watch', ['r' => $release->code]) }}"
+                                            class="btn"
+                                        >
                                             <svg
                                                 xmlns="http://www.w3.org/2000/svg"
                                                 width="24"
