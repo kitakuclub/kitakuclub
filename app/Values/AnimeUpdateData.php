@@ -30,11 +30,11 @@ final readonly class AnimeUpdateData implements Arrayable
         $info = $dto->material_data;
 
         return self::make(
-            status: EntryStatus::from($info->anime_status ?? 'unknown'),
+            status: EntryStatus::from($info->anime_status),
             released_at: $info->released_at,
-            episodes_total: $info->episodes_total ?? 0,
-            episodes_aired: $info->episodes_aired ?? 0,
-            duration: $info->duration ?? 0,
+            episodes_total: $info->episodes_total,
+            episodes_aired: $info->episodes_aired,
+            duration: $info->duration,
             next_episode_at: Carbon::make($info->next_episode_at),
         );
     }
