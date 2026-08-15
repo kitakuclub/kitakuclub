@@ -216,7 +216,7 @@
                             @php($year = date('Y') - $i)
                             <li class="nav-item">
                                 <a
-                                    href="/animes/search?year={{ $year }}"
+                                    href="{{ route('animes.search', ['year' => $year]) }}"
                                     class="nav-link link-danger"
                                 >
                                     {{ $year }} год

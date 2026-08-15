@@ -1,11 +1,11 @@
-@php($title = 'Каталог аниме')
-@php($description = 'На странице вы найдете широкий выбор анимационных произведений от популярных сериалов до классических фильмов.')
+@php($title = 'Поиск аниме')
+@php($description = 'Найдите своё следующее увлечение')
 
-@section('title', config('app.name') . ' — Аниме каталог')
+@section('title', config('app.name') . ' — Аниме поиск')
 
 <x-layouts::main>
     <div class="container mt-4">
-        {{ Breadcrumbs::render('animes.catalog') }}
+        {{ Breadcrumbs::render('animes.search') }}
     </div>
     <x-page-header :$title :$description />
     <div class="page-body">

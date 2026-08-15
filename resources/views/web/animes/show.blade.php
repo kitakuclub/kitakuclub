@@ -307,7 +307,11 @@
                                 <div class="line">
                                     <div class="key">Формат</div>
                                     <div class="value">
-                                        <a href="/animes/search?kind={{ $anime->kind }}">{{ $anime->kind->label() }}</a>
+                                        <a
+                                            href="{{ route('animes.search', ['kind' => $anime->kind]) }}"
+                                        >
+                                            {{ $anime->kind->label() }}
+                                        </a>
                                     </div>
                                 </div>
                                 <div class="line">
@@ -333,7 +337,7 @@
                                         @php($year = $anime->aired_at->format('Y'))
                                         @php($month_name = $anime->aired_at->monthName)
                                         <a
-                                            href="/animes/search?season={{ $anime->aired_season }}&year={{ $year }}"
+                                            href="{{ route('animes.search', ['year' => $year,  'season' => $anime->aired_season]) }}"
                                         >
                                             {{ $month_name }} {{ $year }}
                                         </a>
@@ -343,7 +347,7 @@
                                     <div class="key">Статус</div>
                                     <div class="value" style="color: {{ $anime->status->color() }};">
                                         <a
-                                            href="/animes/search?status={{ $anime->status }}"
+                                            href="{{ route('animes.search', ['status' => $anime->status]) }}"
                                             class="badge link-white text-decoration-none"
                                             style="background-color: {{ $anime->status->color() }};"
                                         >
@@ -358,7 +362,11 @@
                                 <div class="line">
                                     <div class="key">Рейтинг MPAA</div>
                                     <div class="value text-uppercase" title="{{ $anime->rating->desc() }}">
-                                        <a href="/animes/search?mpaa={{ $anime->rating }}">{{ $anime->rating->label() }}</a>
+                                        <a
+                                            href="{{ route('animes.search', ['mpaa' => $anime->rating]) }}"
+                                        >
+                                            {{ $anime->rating->label() }}
+                                        </a>
                                     </div>
                                 </div>
 {{--                                <div class="line">--}}
