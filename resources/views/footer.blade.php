@@ -4,7 +4,7 @@
             <div class="col-lg-auto ms-lg-auto">
                 <ul class="list-inline list-inline-dots mb-0">
                     <li class="list-inline-item">
-                        <a href="//github.com/kitakuclub" target="_blank" class="link-secondary" rel="noopener">
+                        <a href="//github.com/kitakuclub/kitakuclub" target="_blank" class="link-secondary" rel="noopener">
                             <span>Source code</span>
                         </a>
                     </li>
