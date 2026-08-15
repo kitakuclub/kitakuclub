@@ -19,8 +19,9 @@ use Illuminate\Console\Attributes\Description;
 use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 
-#[Signature('kodik:releases')]
+#[Signature('kodik:releases:anime')]
 #[Description('Command description')]
 class KodikReleasesCommand extends Command
 {
@@ -101,6 +102,7 @@ class KodikReleasesCommand extends Command
                             ->save(
                                 Release::make([
                                     'translation_id' => $translation->id,
+                                    'code' => Str::random(16),
                                     'external_id' => $_anime->id,
                                     'link' => $_anime->link,
                                 ])

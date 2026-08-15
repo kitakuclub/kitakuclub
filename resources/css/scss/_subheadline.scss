@@ -1,0 +1,57 @@
+@use "sass:list";
+
+.subheadline {
+    margin-bottom: 1rem;
+    padding: .5rem .5rem .5rem 1rem;
+    border-width: 0 0 0 5px !important;
+    border-left: var(--tblr-border-width) var(--tblr-border-style) rgba(216, 221, 228, 1);
+    background-color:  color-mix(
+        in srgb, var(--tblr-secondary-lt) calc(var(--tblr-bg-opacity, 1) * 100%), transparent
+    ) !important;
+    --tblr-bg-opacity: 1;
+
+    a {
+        &:hover {
+            color: red !important;
+        }
+    }
+
+    $colors: (
+        "blue":   (0, 84, 166),
+        "azure":  (66, 153, 225),
+        "indigo": (66, 99, 235),
+        "purple": (174, 62, 201),
+        "pink":   (214, 51, 108),
+        "red":    (214, 57, 57),
+        "orange": (247, 103, 7),
+        "yellow": (245, 159, 0),
+        "lime":   (116, 184, 22),
+        "green":  (47, 179, 68),
+        "teal":   (12, 166, 120),
+        "cyan":   (23, 162, 184),
+    );
+
+    @each $name, $rgb in $colors {
+        &.#{$name} {
+            color: rgb(list.nth($rgb, 1), list.nth($rgb, 2), list.nth($rgb, 3));
+            border-left: var(--tblr-border-width) var(--tblr-border-style) rgba(
+                list.nth($rgb, 1), list.nth($rgb, 2), list.nth($rgb, 3), 0.8
+            );
+            background-color:  color-mix(
+                in srgb, var(--tblr-#{$name}-lt) calc(var(--tblr-bg-opacity, 1) * 100%), transparent
+            ) !important;
+
+            a {
+                color: rgb(list.nth($rgb, 1), list.nth($rgb, 2), list.nth($rgb, 3));
+
+                // &:hover {
+                //     color: rgba(list.nth($rgb, 1), list.nth($rgb, 2), list.nth($rgb, 3), 0.8);
+                // }
+            }
+        }
+    }
+}
+
+.subheadline-body {
+    margin-bottom: 2rem;
+}

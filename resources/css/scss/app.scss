@@ -1,0 +1,23 @@
+@use 'subheadline';
+
+.line-container {
+    .line {
+        margin: 5px 0;
+
+        .key,
+        .field {
+            display: inline;
+            --tblr-text-opacity: 1;
+            color: rgba(var(--tblr-muted-rgb), var(--tblr-text-opacity)) !important;
+        }
+
+        .key:after,
+        .field:after {
+            content: ':';
+        }
+
+        .value {
+            display: inline;
+        }
+    }
+}

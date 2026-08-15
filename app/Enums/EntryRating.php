@@ -28,4 +28,30 @@ enum EntryRating: string
             default => self::UNKNOWN,
         };
     }
+
+    public function label(): string
+    {
+        return match ($this) {
+            self::G => 'G',
+            self::PG => 'PG',
+            self::PG_13 => 'PG-13',
+            self::R => 'R',
+            self::R_PLUS => 'R+',
+            self::RX => 'RX',
+            default => 'Unknown',
+        };
+    }
+
+    public function desc(): string
+    {
+        return match ($this) {
+            self::G => 'для всех возрастов',
+            self::PG => 'для детей',
+            self::PG_13 => 'от 13 лет',
+            self::R => 'насилие и/или нецензурная лексика',
+            self::R_PLUS => 'есть сцены легкой эротики',
+            self::RX => 'хентай',
+            default => 'Unknown',
+        };
+    }
 }

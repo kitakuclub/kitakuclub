@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('releases', function (Blueprint $table) {
             $table->id();
             $table->morphs('releasable', 'idx_releases_on_releasable');
+            $table->string('code', 16)->unique('unq_releases_on_code');
             $table->string('external_id');
             $table->string('link');
             $table->timestamps();

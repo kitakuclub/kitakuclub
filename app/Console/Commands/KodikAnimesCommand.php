@@ -38,8 +38,8 @@ class KodikAnimesCommand extends Command
         $this->connector->query()->add('limit', 100);
         $this->connector->query()->add('types', 'anime,anime-serial');
         $this->connector->query()->add('has_field', 'shikimori_id');
-        $this->connector->query()->add('sort', 'year');
-        $this->connector->query()->add('order', 'asc');
+        $this->connector->query()->add('sort', 'updated_at');
+        $this->connector->query()->add('order', 'desc');
         $this->connector->query()->add('with_material_data', true);
 
         do
