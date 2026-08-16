@@ -16,14 +16,19 @@ Breadcrumbs::for('animes', function (BreadcrumbTrail $trail) {
     $trail->push('Аниме', route('animes'));
 });
 
+Breadcrumbs::for('animes.search', function (BreadcrumbTrail $trail) {
+    $trail->parent('animes');
+    $trail->push('Поиск', route('animes.search'));
+});
+
 Breadcrumbs::for('animes.catalog', function (BreadcrumbTrail $trail) {
     $trail->parent('animes');
     $trail->push('Каталог', route('animes.catalog'));
 });
 
-Breadcrumbs::for('animes.search', function (BreadcrumbTrail $trail) {
+Breadcrumbs::for('animes.schedule', function (BreadcrumbTrail $trail) {
     $trail->parent('animes');
-    $trail->push('Поиск', route('animes.search'));
+    $trail->push('Расписание', route('animes.schedule'));
 });
 
 Breadcrumbs::for('animes.show', function (BreadcrumbTrail $trail, Anime $anime) {
