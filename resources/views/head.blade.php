@@ -9,7 +9,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Potta+One&family=Reggae+One&family=Yuji+Boku&family=Yuji+Mai&display=swap" rel="stylesheet">
-    @stack('head-link')
+    @stack('head-style')
     @stack('head-script')
     @stack('head-ld+json')
 </head>
