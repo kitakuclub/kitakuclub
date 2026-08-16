@@ -13,11 +13,15 @@
                 $href = route('animes.search', ['year' => now()->year, 'season' => EntrySeason::fromDate(now())]);
                 $label = $season->animeSeasonLabel();
             @endphp
-            <x-ui.subheadline :$label :$href />
-            <x-carousels-anime />
-            <div class="row mt-5">
+            <x-ui.subheadline :$label :$href>
+                <x-carousels-anime />
+            </x-ui.subheadline>
+
+            <div class="row">
                 <div class="col">
-                    <x-ui.subheadline label="Обновления аниме"/>
+                    <x-ui.subheadline label="Обновления аниме">
+                        <x-updates-anime />
+                    </x-ui.subheadline>
                 </div>
                 <div class="col">
                     <x-ui.subheadline label="Недавно вышедшие аниме"/>

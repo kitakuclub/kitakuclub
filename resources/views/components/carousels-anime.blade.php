@@ -1,22 +1,6 @@
-{{--
-    Компонент карусели аниме (Swiper.js) — тёмная тема
-
-    Использование в любом Blade-шаблоне:
-
-    <x-carousels-anime :items="$items" />
-
-    где $items — массив/коллекция объектов с полями:
-        - title  (string) — название
-        - image  (string) — url постера
-        - url    (string) — ссылка на страницу тайтла (необязательно)
-
-    Можно вывести несколько каруселей на странице — у каждой свой
-    уникальный id (см. $carouselId ниже), конфликтов не будет.
---}}
-
 @props([
     'items' => [],
-    'slidesPerView' => 5,   // сколько карточек видно на десктопе
+    'slidesPerView' => 5,
 ])
 
 @php
@@ -136,7 +120,6 @@
             transition: transform .3s ease;
         }
 
-        /* серая полупрозрачная плёнка поверх постера */
         .anime-card-poster::after {
             content: '';
             position: absolute;
