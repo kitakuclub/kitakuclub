@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace App\View\Components;
 
+use App\Enums\EntryStatus;
 use App\Models\Anime;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Collection;
 use Illuminate\View\Component;
 
-class UpdatesAnime extends Component
+class NewestAnime extends Component
 {
     /**
      * Create a new component instance.
@@ -23,8 +25,8 @@ class UpdatesAnime extends Component
      */
     public function render(): View
     {
-        $updates = Anime::query()->latestUpdates(5);
+        $items = Anime::query()->latestReleases();
 
-        return view('components.updates-anime', compact('updates'));
+        return view('components.newest-anime', compact('items'));
     }
 }
