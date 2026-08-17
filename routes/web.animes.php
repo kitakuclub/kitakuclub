@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Http\Controllers\AnimeCatalogController;
 use App\Http\Controllers\AnimeController;
+use App\Http\Controllers\AnimeScheduleController;
 use App\Http\Controllers\AnimeSearchController;
 use Illuminate\Support\Facades\Route;
 
@@ -12,6 +13,7 @@ Route::group(['prefix' => '/animes', 'as' => 'animes'], function () {
     Route::get('/', [AnimeController::class, 'index']);
     Route::get('/search', [AnimeSearchController::class, 'index'])->name('.search');
     Route::get('/catalog', [AnimeCatalogController::class, 'index'])->name('.catalog');
+    Route::get('/schedule', [AnimeScheduleController::class, 'index'])->name('.schedule');
     Route::get('/{anime}/{slug}', [AnimeController::class, 'show'])->name('.show');
 
 });

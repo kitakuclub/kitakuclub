@@ -10,7 +10,7 @@ use App\Enums\EntrySeason;
 use App\Enums\EntryStatus;
 use App\Http\Integrations\Kodik\DTOs\MaterialDataDto;
 use App\Http\Integrations\Kodik\DTOs\MaterialDto;
-use DateTimeInterface;
+use Carbon\CarbonInterface;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Carbon;
 
@@ -22,14 +22,14 @@ final readonly class AnimeCreateData implements Arrayable
         public EntryRating $rating,
         public EntryStatus $status,
         public string $slug,
-        public DateTimeInterface|null $aired_at,
+        public CarbonInterface|null $aired_at,
         public int|null $aired_year,
         public EntrySeason $aired_season,
-        public DateTimeInterface|null $released_at,
+        public CarbonInterface|null $released_at,
         public int $episodes_total,
         public int $episodes_aired,
         public int $duration,
-        public DateTimeInterface|null $next_episode_at,
+        public CarbonInterface|null $next_episode_at,
     )
     {
     }
@@ -39,11 +39,11 @@ final readonly class AnimeCreateData implements Arrayable
         /** @var MaterialDataDto $info */
         $info = $dto->material_data;
 
-        /** @var DateTimeInterface|null $aired_at */
+        /** @var CarbonInterface|null $aired_at */
         $aired_at = Carbon::make($info->aired_at);
 
         $aired_year = is_null($aired_at) ? null : (int)$aired_at->format('Y');
-        $aired_season = is_null($aired_at) ? EntrySeason::UNKNOWN : EntrySeason::fromKodik($aired_at);
+        $aired_season = is_null($aired_at) ? EntrySeason::UNKNOWN : EntrySeason::fromDate($aired_at);
 
         return self::make(
             name: $dto->title,
@@ -68,14 +68,14 @@ final readonly class AnimeCreateData implements Arrayable
         EntryRating $rating,
         EntryStatus $status,
         string $slug,
-        DateTimeInterface|null $aired_at,
+        CarbonInterface|null $aired_at,
         int|null $aired_year,
         EntrySeason $aired_season,
-        DateTimeInterface|null $released_at,
+        CarbonInterface|null $released_at,
         int $episodes_total,
         int $episodes_aired,
         int $duration,
-        DateTimeInterface|null $next_episode_at,
+        CarbonInterface|null $next_episode_at,
     ) : self
     {
         return new self(

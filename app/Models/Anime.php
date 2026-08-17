@@ -61,6 +61,7 @@ class Anime extends Model implements HasMedia
             'rating' => AnimeRatingCast::class,
             'status' => AnimeStatusCast::class,
             'aired_at' => 'datetime',
+            'released_at' => 'datetime',
             'next_episode_at' => 'datetime',
         ];
     }

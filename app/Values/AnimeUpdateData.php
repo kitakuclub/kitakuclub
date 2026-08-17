@@ -7,7 +7,7 @@ namespace App\Values;
 use App\Enums\EntryStatus;
 use App\Http\Integrations\Kodik\DTOs\MaterialDataDto;
 use App\Http\Integrations\Kodik\DTOs\MaterialDto;
-use DateTimeInterface;
+use Carbon\CarbonInterface;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Carbon;
 
@@ -19,7 +19,7 @@ final readonly class AnimeUpdateData implements Arrayable
         public int $episodes_total,
         public int $episodes_aired,
         public int $duration,
-        public DateTimeInterface|null $next_episode_at,
+        public CarbonInterface|null $next_episode_at,
     )
     {
     }
@@ -45,7 +45,7 @@ final readonly class AnimeUpdateData implements Arrayable
         int $episodes_total,
         int $episodes_aired,
         int $duration,
-        DateTimeInterface|null $next_episode_at,
+        CarbonInterface|null $next_episode_at,
     ) : self
     {
         return new self(

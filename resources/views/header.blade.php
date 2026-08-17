@@ -139,22 +139,20 @@
         <div class="navbar p-0">
             <div class="container flex-row-reverse">
                 <ul class="navbar-nav text-uppercase">
+                    @foreach([
+                        'animes' => 'Главная',
+                        'animes.catalog' => 'Каталог',
+                        'animes.schedule' => 'Расписание',
+                    ] as $route => $title)
                     <li class="nav-item">
                         <a
-                            @class(['nav-link', 'bg-azure-lt' => request()->routeIs('animes')])
-                            href="{{ route('animes') }}"
+                            @class(['nav-link', 'bg-azure-lt' => request()->routeIs($route)])
+                            href="{{ route($route) }}"
                         >
-                            <span class="nav-link-title">Главная</span>
+                            <span class="nav-link-title">{{ $title }}</span>
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <a
-                            @class(['nav-link', 'bg-azure-lt' => request()->routeIs('animes.catalog')])
-                            href="{{ route('animes.catalog') }}"
-                        >
-                            <span class="nav-link-title">Каталог</span>
-                        </a>
-                    </li>
+                    @endforeach
                     <li class="nav-item">
                         <a class="nav-link disabled" href="/">
                             <span class="nav-link-title">Случайное</span>
@@ -176,7 +174,10 @@
                         >
                             <span class="nav-link-title me-1">Сообщество</span>
                         </a>
-                        <div style="margin-top: 4px;" class="dropdown-menu dropdown-menu-end rounded-0 shadow-none border-top-0">
+                        <div
+                            class="dropdown-menu dropdown-menu-end rounded-0 shadow-none border-top-0"
+                            style="margin-top: 4px;"
+                        >
                             <a class="disabled dropdown-item" href="/">
                                 <span>Рецензии</span>
                             </a>
