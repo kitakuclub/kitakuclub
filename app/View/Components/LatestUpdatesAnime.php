@@ -4,16 +4,18 @@ declare(strict_types=1);
 
 namespace App\View\Components;
 
-use App\Models\Anime;
+use App\Services\Contracts\AnimeFeedService as AnimeFeedServiceContract;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class UpdatesAnime extends Component
+class LatestUpdatesAnime extends Component
 {
     /**
      * Create a new component instance.
      */
-    public function __construct()
+    public function __construct(
+        private readonly AnimeFeedServiceContract $feed
+    )
     {
         //
     }
@@ -23,8 +25,8 @@ class UpdatesAnime extends Component
      */
     public function render(): View
     {
-        $updates = Anime::query()->latestUpdates(5);
+        $updates = $this->feed->latestUpdates(5);
 
-        return view('components.updates-anime', compact('updates'));
+        return view('components.latest-updates-anime', compact('updates'));
     }
 }

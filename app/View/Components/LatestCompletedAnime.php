@@ -10,7 +10,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Support\Collection;
 use Illuminate\View\Component;
 
-class CompletedAnime extends Component
+class LatestCompletedAnime extends Component
 {
     /**
      * Create a new component instance.
@@ -35,6 +35,6 @@ class CompletedAnime extends Component
         /** @var Collection<Anime> $items */
         $items = $q->get();
 
-        return view('components.completed-anime', compact('items'));
+        return view('components.latest-completed-anime', compact('items'));
     }
 }

@@ -1,19 +1,19 @@
 @props([
-    'items' => []
+    'releases' => []
 ])
 
 <div class="card rounded-0 shadow-none border-0">
     <div class="list-group list-group-horizontal list-group-flush row">
-        @foreach($items as $release)
+        @foreach($releases as $item)
             <div class="col-6 p-0">
             <a
-                href="{{ route('watch', ['r' => $release->release_code]) }}"
+                href="{{ route('watch', ['r' => $item->release_code]) }}"
                 class="list-group-item list-group-item-action p-0"
             >
                 <div class="row">
                     <div class="col-2" style="height: 100px;">
                         <img
-                            src="{{ $release->poster_url }}"
+                            src="{{ $item->poster_url }}"
                             alt="Bleach"
                             width="55"
                             height="80"
@@ -23,9 +23,9 @@
                     </div>
                     <div class="col-10">
                         <div class="py-3 pe-3">
-                            <div class="fw-bold">{{ $release->anime_name }}</div>
+                            <div class="fw-bold">{{ $item->anime_name }}</div>
                             <div class="text-secondary">
-                                — Озвучка {{ $release->funteam_name }}
+                                — Озвучка {{ $item->funteam_name }}
                             </div>
                         </div>
                     </div>
