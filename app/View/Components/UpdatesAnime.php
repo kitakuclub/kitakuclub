@@ -46,10 +46,9 @@ class UpdatesAnime extends Component
                 'a.id as anime_id',
                 'a.name as anime_name',
                 'a.slug as anime_slug',
-                'f.id as funteam_id',
                 'f.name as funteam_name',
-                'ep.id as episode_id',
                 'ep.number as episode_number',
+                'r.code as release_code',
                 'ep.created_at as added_at',
                 DB::raw('ROW_NUMBER() OVER (
                     PARTITION BY a.id, f.id

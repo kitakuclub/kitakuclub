@@ -69,6 +69,10 @@ class KodikPostersAnimeCommand extends Command
                         )
                         ->first();
 
+                    if (is_null($anime)) {
+                        return;
+                    }
+
                     /** @var string|null $poster_url */
                     $poster_url = $_anime->material_data->poster_url;
 

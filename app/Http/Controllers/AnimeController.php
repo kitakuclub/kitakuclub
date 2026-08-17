@@ -14,7 +14,9 @@ class AnimeController extends Controller
      */
     public function index()
     {
-        return view('web.animes.index');
+        $animes_list = Anime::query()->orderByDesc('created_at')->limit(20)->get();
+
+        return view('web.animes.index', compact('animes_list'));
     }
 
     /**

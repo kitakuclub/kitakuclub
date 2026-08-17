@@ -24,27 +24,14 @@
                     </x-ui.subheadline>
                 </div>
                 <div class="col">
-                    <x-ui.subheadline label="Недавно вышедшие аниме"/>
+                    <x-ui.subheadline label="Недавно вышедшие аниме">
+                        <x-completed-anime />
+                    </x-ui.subheadline>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-8">
-                    <div class="h2 text-uppercase m-0">Новые аниме на сайте</div>
-                    <div>На данной странице отображены аниме, отсортированные по дате добавления</div>
-                </div>
-                <div class="col-4">
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="h2 text-uppercase m-0">Расписание</div>
-                            <div>Даты выхода эпизодов в Японии</div>
-                        </div>
-                        <div class="col-12 mt-3">
-                            <div class="h2 text-uppercase m-0">Рекомендуем</div>
-                            <div>Блок для наших друзей и спонсоров</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <div class="h2 text-uppercase m-0">Новые аниме на сайте</div>
+            <div class="mb-4">На данной странице отображены аниме, отсортированные по дате добавления</div>
+            <x-cols-anime :$animes_list />
         </div>
     </div>
 </x-layouts::main>
